@@ -64,13 +64,15 @@ export class Bot {
 
   pluginManager = new PluginManager(this);
 
-  database!: BaseDatabaseModel;
+  database: BaseDatabaseModel;
   aiManager: BaseAIManager = new BardAIManager();
 
   music: MusicSubsystem = new MusicSubsystem(this);
 
   constructor() {
     if (!discordToken && !revoltToken) throw new Error("No tokens found.");
+
+    this.database = new SqlDatabaseManager(this);
 
     this.discordClient = new Client(this.discordClientOptions);
     this.revoltClient = new Client({
@@ -91,7 +93,6 @@ export class Bot {
     this.discordClient.on(Events.ClientReady, (client) => this.discordClientReady(client));
 
     await this.pluginManager.init();
-    this.database = new SqlDatabaseManager(this);
     await this.database.init();
     await this.aiManager.init({});
 
