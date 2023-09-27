@@ -1,11 +1,11 @@
-import { readdirSync } from "fs";
-import path from "path";
-import { URL } from "url";
+import { readdirSync } from "node:fs";
+import path from "node:path";
+import { URL } from "node:url";
 import { Bot } from "../Bot.js";
 import { Logger, BaseCommandConstructor } from "../common/index.js";
 
-const __dirname = new URL(".", import.meta.url).pathname;
-const pluginDir = path.join(__dirname, "../plugins");
+const currentDirectory = new URL(".", import.meta.url).pathname;
+const pluginDir = path.join(currentDirectory, "../plugins");
 
 export class PluginManager {
   commands = new Map<string, BaseCommandConstructor>();
@@ -41,5 +41,7 @@ export class PluginManager {
         }
       }));
     }));
+
+    Logger.success(`Loaded ${this.commands.size} plugins.`);
   }
 }
