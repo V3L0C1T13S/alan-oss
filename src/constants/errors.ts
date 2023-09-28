@@ -11,4 +11,5 @@ export const Messages = {
   TooLittleArguments: "Too little arguments.",
   InteractionsNotSupported: "Interactions are not supported for this feature.",
   Unimplemented: "This feature is unimplemented.",
+  NoSpeechDetected: "No speech was detected.",
 };

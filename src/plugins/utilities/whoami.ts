@@ -1,3 +1,4 @@
+import { CommandParameter } from "common/Parameter.js";
 import Whois from "./whois.js";
 
 export default class whoami extends Whois {
@@ -9,4 +10,5 @@ export default class whoami extends Whois {
   }
 
   static description = "Get information about yourself";
+  static parameters: CommandParameter[] = [];
 }

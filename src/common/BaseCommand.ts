@@ -1,6 +1,7 @@
 import {
   APIAttachment,
   APIEmbed,
+  Attachment,
   Channel,
   ChannelType,
   Client,
@@ -24,7 +25,7 @@ type CommandType = TextCommandType | InteractionCommandType;
 
 export type ClientType = "discord" | "revolt";
 
-export type CommandArguments = Record<string, string | boolean | any[]>;
+export type CommandArguments = Record<string, string | boolean | number | any[]>;
 
 interface CommandArgs {
   users?: User[];
@@ -76,6 +77,7 @@ export class BaseCommand {
   interaction?: RepliableInteraction;
   author!: User;
   args?: CommandArgs;
+  attachments?: Message["attachments"];
 
   constructor(bot: Bot, client: Client, options: CommandOptions) {
     this.bot = bot;
@@ -85,11 +87,18 @@ export class BaseCommand {
     if (options.args) this.args = options.args;
 
     if (options.type === "text") {
-      this.author = options.message.author;
       this.message = options.message;
+      this.author = options.message.author;
+      this.attachments = options.message.attachments;
     } else if (options.type === "interaction") {
+      // @ts-ignore stfu :)
+      this.interaction = options.interaction;
       this.channel = options.interaction.channel;
       this.author = options.interaction.user;
+      if (options.interaction.isChatInputCommand()) {
+        const attachments = options.interaction.options.resolved?.attachments;
+        if (attachments) this.attachments = attachments;
+      }
     }
 
     if (options.channel) this.channel = options.channel;
@@ -138,7 +147,7 @@ export class BaseCommand {
   protected joinArgsToString() {
     if (!this.args?.subcommands) return;
 
-    return Object.values(this.args.subcommands).join(" ");
+    return Object.values(this.args.subcommands).flat().join(" ");
   }
 
   static async init(params: initParameters) {

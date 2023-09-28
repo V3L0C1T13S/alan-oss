@@ -1,5 +1,5 @@
 import { ErrorMessages } from "../../constants/index.js";
-import { BaseCommand } from "../../common/index.js";
+import { BaseCommand, CommandParameter, CommandParameterTypes } from "../../common/index.js";
 
 export default class avatar extends BaseCommand {
   async run() {
@@ -12,4 +12,10 @@ export default class avatar extends BaseCommand {
   }
 
   static description = "Get your (or someone elses) avatar URL";
+  static parameters: CommandParameter[] = [{
+    name: "user",
+    description: "The user to get the avatar of.",
+    type: CommandParameterTypes.User,
+    optional: true,
+  }];
 }

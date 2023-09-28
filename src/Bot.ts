@@ -1,5 +1,7 @@
 import {
   ActivityType,
+  ApplicationCommandOptionType,
+  ApplicationCommandType,
   AttachmentBuilder,
   Client,
   ClientOptions,
@@ -11,6 +13,7 @@ import {
   PresenceStatusData,
   REST,
   Routes,
+  SlashCommandAttachmentOption,
   SlashCommandBooleanOption,
   SlashCommandBuilder,
   SlashCommandChannelOption,
@@ -33,9 +36,13 @@ import {
 } from "./constants/index.js";
 import { PluginManager } from "./managers/index.js";
 import parseCommand from "./common/utils/parseCommandV2.js";
-import { BaseDatabaseModel, CommandParameterTypes, SqlDatabaseManager } from "./common/index.js";
+import {
+  BaseDatabaseModel, CommandArguments, CommandParameterTypes, SqlDatabaseManager,
+} from "./common/index.js";
 import { MusicSubsystem } from "./common/utils/music/MusicSubsystem.js";
-import { Logger, BaseAIManager, BardAIManager } from "./common/utils/index.js";
+import {
+  Logger, BaseAIManager, BardAIManager, isOwner, canExecuteCommand,
+} from "./common/utils/index.js";
 
 export class Bot {
   revoltClient: Client;
@@ -169,6 +176,15 @@ export class Bot {
 
                   break;
                 }
+                case CommandParameterTypes.Attachment: {
+                  const option = new SlashCommandAttachmentOption()
+                    .setName(param.name)
+                    .setDescription(param.description)
+                    .setRequired(!param.optional ?? true);
+                  slashCmd.addAttachmentOption(option);
+
+                  break;
+                }
                 default: Logger.error(`Unhandled param type ${param.type}`);
               }
             } catch (e) {
@@ -208,13 +224,15 @@ export class Bot {
     client.user?.presence.set({
       status: botPresence as PresenceStatusData,
       activities: [{
-        name: `${client.guilds.cache.size} Servers - @${client.user.username}`,
-        type: ActivityType.Watching,
+        name: `Learning from ${client.guilds.cache.size} servers - @${client.user.username}`,
+        type: ActivityType.Custom,
       }],
     });
   }
 
   protected async onMessage(message: Message) {
+    if (message.author.id === message.client.user.id) return;
+    if (message.author.bot) return;
     if (!message.content.startsWith(botPrefix)) return;
 
     const text = message.content.substring(botPrefix.length);
@@ -226,9 +244,11 @@ export class Bot {
     const Cmd = this.pluginManager.commands.get(commandName);
     if (!Cmd) return;
 
-    await this.database.addCount(commandName);
+    if (!canExecuteCommand(message.author.id, Cmd, this.identifyClient(message.client))) {
+      await message.reply(ErrorMessages.DeveloperOnlyCommand);
 
-    Logger.log(await this.database.getCounts());
+      return;
+    }
 
     const commandClass = new Cmd(this, message.client, {
       message,
@@ -241,19 +261,42 @@ export class Bot {
       },
     });
 
-    const errorMsg = await commandClass.run().catch((e) => ({
+    const result = await commandClass.run().catch((e) => ({
       content: ErrorMessages.ErrorOccurred,
       files: [new AttachmentBuilder(Buffer.from(`${e}`)).setName("error.txt")],
     }));
 
-    await message.reply(errorMsg).catch((e) => Logger.error(ErrorMessages.ErrorInErrorHandler, e));
+    await message.reply(result).catch((e) => Logger.error(ErrorMessages.ErrorInErrorHandler, e));
   }
 
   protected async interactionCreate(interaction: Interaction) {
-    if (interaction.isCommand()) {
+    if (interaction.isChatInputCommand()) {
       const { commandName, options } = interaction;
       const Cmd = this.pluginManager.commands.get(commandName);
       if (!Cmd) return;
+
+      if (!canExecuteCommand(interaction.user.id, Cmd, this.identifyClient(interaction.client))) {
+        await interaction.reply(ErrorMessages.DeveloperOnlyCommand);
+
+        return;
+      }
+
+      const subcommands: CommandArguments = {};
+
+      options.data.forEach((option) => {
+        switch (option.type) {
+          case ApplicationCommandOptionType.Number:
+          case ApplicationCommandOptionType.Boolean:
+          case ApplicationCommandOptionType.String: {
+            if (option.value !== undefined) subcommands[option.name] = option.value;
+
+            break;
+          }
+          case ApplicationCommandOptionType.Attachment: break;
+          case ApplicationCommandOptionType.User: break;
+          default: Logger.error(`Unhandled option type ${option.type}`);
+        }
+      });
 
       const commandClass = new Cmd(this, interaction.client, {
         type: "interaction",
@@ -264,18 +307,20 @@ export class Bot {
             .filter((x) => x.type === CommandParameterTypes.User)
             .map((x) => interaction.options.getUser(x.name)?.fetch())))
             .filter((x): x is User => !!x),
-          subcommands: {},
+          subcommands,
         },
       });
 
       const result = await commandClass.run();
 
-      await interaction.reply(result).catch((e) => {
-        interaction.reply({
-          content: "An error occurred!",
-          files: [new AttachmentBuilder(Buffer.from(e)).setName("error.txt")],
-        }).catch(Logger.error);
-      });
+      await (interaction.deferred ? interaction.followUp(result) : interaction.reply(result))
+        .catch((e: unknown) => {
+          Logger.error("Interaction error:", e);
+          interaction.reply({
+            content: "An error occurred!",
+            files: [new AttachmentBuilder(Buffer.from(`${e}`)).setName("error.txt")],
+          }).catch(Logger.error);
+        });
     }
   }
 }

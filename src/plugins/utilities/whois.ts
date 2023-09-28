@@ -42,7 +42,7 @@ export default class Whois extends BaseCommand {
     );
 
     return `ID: ${user.id}
-created at: <t:${user.createdTimestamp}:F>
+created at: <t:${user.createdAt.getUTCSeconds()}:F>
 username: ${user.username}
 discriminator: ${user.discriminator}
 avatar url: ${this.clientType === "revolt" ? `https://autumn.revolt.chat/avatars/${user.avatar}` : user.avatarURL() ?? "No avatar found."}

@@ -58,7 +58,7 @@ export default class help extends BaseCommand {
   static parameters: CommandParameter[] = [{
     name: "command",
     description: "The command to get help on.",
-    optional: false,
+    optional: true,
     type: CommandParameterTypes.String,
   }];
 

@@ -38,6 +38,9 @@ dependencies:
   mongoose:
     specifier: ^7.5.3
     version: 7.5.3
+  nodejs-whisper:
+    specifier: ^0.1.4
+    version: 0.1.4
   revoice.js:
     specifier: ^0.1.7537
     version: 0.1.7537(bufferutil@4.0.7)(prop-types@15.8.1)(react-dom@17.0.2)(react@17.0.2)(utf-8-validate@6.0.3)
@@ -2949,6 +2952,11 @@ packages:
       side-channel: 1.0.4
     dev: true
 
+  /interpret@1.4.0:
+    resolution: {integrity: sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==}
+    engines: {node: '>= 0.10'}
+    dev: false
+
   /ip@1.1.8:
     resolution: {integrity: sha512-PuExPYUiu6qMBQb4l06ecm6T6ujzhmh+MeJcW9wa89PoAz5pvd4zPgN5WJV104mb6S2T1AwNIAaB70JNrLQWhg==}
     dev: false
@@ -3635,6 +3643,17 @@ packages:
     resolution: {integrity: sha512-uYr7J37ae/ORWdZeQ1xxMJe3NtdmqMC/JZK+geofDrkLUApKRHPd18/TxtBOJ4A0/+uUIliorNrfYV6s1b02eQ==}
     dev: false
 
+  /nodejs-whisper@0.1.4:
+    resolution: {integrity: sha512-V3cRV+K4hA4TGTgGxAcz3+zDPfPgD2e82KXojgS3Tgbw4RLnirzE1DdiW9hFrcuR3/6pyr7sXvctYhZUV4asvQ==}
+    hasBin: true
+    dependencies:
+      ffmpeg-static: 5.2.0
+      readline-sync: 1.4.10
+      shelljs: 0.8.5
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /nodemon@3.0.1:
     resolution: {integrity: sha512-g9AZ7HmkhQkqXkRc20w+ZfQ73cHLbE8hnPbtaFbFtCumZsjyMhKk9LajQ07U5Ux28lvFjZ5X7HvWR1xzU8jHVw==}
     engines: {node: '>=10'}
@@ -4134,6 +4153,11 @@ packages:
       picomatch: 2.3.1
     dev: true
 
+  /readline-sync@1.4.10:
+    resolution: {integrity: sha512-gNva8/6UAe8QYepIQH/jQ2qn91Qj0B9sYjMBBs3QOB8F2CXcKgLxQaJRP76sWVRQt+QU+8fAkCbCvjjMFu7Ycw==}
+    engines: {node: '>= 0.8.0'}
+    dev: false
+
   /recast@0.17.6:
     resolution: {integrity: sha512-yoQRMRrK1lszNtbkGyM4kN45AwylV5hMiuEveUBlxytUViWevjvX6w+tzJt1LH4cfUhWt4NZvy3ThIhu6+m5wQ==}
     engines: {node: '>= 4'}
@@ -4142,6 +4166,13 @@ packages:
       esprima: 4.0.1
       private: 0.1.8
       source-map: 0.6.1
+    dev: false
+
+  /rechoir@0.6.2:
+    resolution: {integrity: sha512-HFM8rkZ+i3zrV+4LQjwQ0W+ez98pApMGM3HUrN04j3CqzPOzl9nmP15Y8YXNm8QHGv/eacOVEjqhmWpkRV0NAw==}
+    engines: {node: '>= 0.10'}
+    dependencies:
+      resolve: 1.22.6
     dev: false
 
   /reflect-metadata@0.1.13:
@@ -4368,6 +4399,16 @@ packages:
   /shebang-regex@3.0.0:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
+
+  /shelljs@0.8.5:
+    resolution: {integrity: sha512-TiwcRcrkhHvbrZbnRcFYMLl30Dfov3HKqzp5tO5b4pt6G/SezKcYhmDg15zXVBswHmctSAQKznqNW2LO5tTDow==}
+    engines: {node: '>=4'}
+    hasBin: true
+    dependencies:
+      glob: 7.2.3
+      interpret: 1.4.0
+      rechoir: 0.6.2
+    dev: false
 
   /shiki@0.14.4:
     resolution: {integrity: sha512-IXCRip2IQzKwxArNNq1S+On4KPML3Yyn8Zzs/xRgcgOWIr8ntIK3IKzjFPfjy/7kt9ZMjc+FItfqHRBg8b6tNQ==}

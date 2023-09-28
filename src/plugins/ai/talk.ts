@@ -1,27 +1,32 @@
+import { AttachmentBuilder } from "discord.js";
 import {
   Logger, BaseCommand, CommandParameter, CommandParameterTypes, isOwner,
 } from "../../common/index.js";
 import {
-  ErrorMessages, Messages,
+  ErrorMessages,
 } from "../../constants/index.js";
+
+const maxMessageLength = 2000;
 
 export default class AITalk extends BaseCommand {
   static private = true;
 
   async run() {
-    if (!isOwner(this.author.id, this.clientType)) return ErrorMessages.DeveloperOnlyCommand;
-    if (!this.message || !this.args?.subcommands) return Messages.InteractionsNotSupported;
-
-    const prompt = this.message.content.replaceAll("a!talk ", "");
-    const promptV2 = this.args.subcommands.prompt ?? this.joinArgsToString();
-    if (!promptV2) return ErrorMessages.NotEnoughArgs;
+    const prompt = this.args?.subcommands?.prompt ?? this.joinArgsToString();
+    if (!prompt) return ErrorMessages.NotEnoughArgs;
 
     Logger.log(prompt);
-    Logger.log(promptV2);
 
     try {
       await this.ack();
-      const response = await this.bot.aiManager.ask(prompt);
+      const response = await this.bot.aiManager.ask(prompt.toString());
+
+      if (response.length > maxMessageLength) {
+        return {
+          content: "The AI blew over the length limit. Here's your response.",
+          files: [new AttachmentBuilder(Buffer.from(response, "utf-8")).setName("response.txt")],
+        };
+      }
 
       return response;
     } catch (e) {
