@@ -7,6 +7,10 @@ export namespace Logger {
       console.log(...args);
     }
 
+    export function info(...args: any[]) {
+      return console.log(`${FgGreen}%s${Reset}`, ...args);
+    }
+
     export function error(...args: any[]) {
       return console.log(`${FgRed}%s${Reset}`, ...args);
     }

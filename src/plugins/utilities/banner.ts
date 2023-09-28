@@ -1,3 +1,4 @@
+import { revoltAutumnURL } from "../../constants/index.js";
 import { CommandParameter, CommandParameterTypes, BaseCommand } from "../../common/index.js";
 
 const BannerNotFound = "No banner found.";
@@ -8,7 +9,7 @@ export default class banner extends BaseCommand {
     if (!user.banner) return BannerNotFound;
 
     return this.clientType === "revolt"
-      ? `https://autumn.revolt.chat/backgrounds/${user.banner}`
+      ? `${revoltAutumnURL}/backgrounds/${user.banner}`
       : user.bannerURL() ?? BannerNotFound;
   }
 

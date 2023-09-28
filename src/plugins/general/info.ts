@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "discord.js";
 import { BaseCommand, getReflectcordInstanceInfo } from "../../common/index.js";
-import { discordOwnerId, revoltOwnerId } from "../../constants/index.js";
+import { discordOwnerId, revoltAutumnURL, revoltOwnerId } from "../../constants/index.js";
 
 export default class info extends BaseCommand {
   async run() {
@@ -19,10 +19,10 @@ export default class info extends BaseCommand {
     });
     if (this.client.user?.avatar && embed.data.author) {
       embed.data.author.icon_url = this.clientType === "revolt"
-        ? `https://autumn.revolt.chat/avatars/${this.client.user.avatar}`
+        ? `${revoltAutumnURL}/avatars/${this.client.user.avatar}`
         : this.client.user.avatarURL()!;
     }
-    if (owner) embed.setDescription(`This instance is hosted by **${owner.username}#${owner.discriminator}** on ${this.clientType}`);
+    if (owner) embed.setDescription(`This instance is hosted by **${owner.username}${owner.discriminator !== "0" ? `#${owner.discriminator}` : ""}** on ${this.clientType}`);
     else embed.setDescription("This instance has no owner. Tell the owner to set his .env correctly!");
 
     embed.setFields({

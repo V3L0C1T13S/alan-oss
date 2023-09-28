@@ -1,27 +1,54 @@
 import os from "node:os";
 import path from "node:path";
-import { mkdirSync, writeFileSync } from "node:fs";
 import { nodewhisper } from "nodejs-whisper";
 import { AttachmentBuilder } from "discord.js";
-import { BaseCommand, CommandParameter, CommandParameterTypes } from "../../common/index.js";
-import { Messages } from "../../constants/index.js";
+import { mkdir, writeFile } from "node:fs/promises";
+import { fileTypeFromBuffer } from "file-type";
+import {
+  BaseCommand, CommandParameter, CommandParameterTypes, MessageFormatter,
+} from "../../common/index.js";
+import {
+  ErrorMessages, Messages, revoltAutumnURL, revoltJanuaryURL,
+} from "../../constants/index.js";
 
 const dirPath = path.join(os.tmpdir(), "alan-tmp/audio");
 const MaxMessageLength = 1500;
 
+const supportedTypes = ["audio", "video"];
+
 export default class Transcribe extends BaseCommand {
   async run() {
-    const attachment = this.attachments?.first();
-    if (!attachment) return "Please attach audio or video.";
+    const attachment = await this.getFirstAttachment();
+    if (!attachment) return ErrorMessages.NeedsAudioOrVideo;
 
     await this.ack();
 
-    const url = attachment?.url;
-    const filePath = path.join(dirPath, attachment.id);
-    const buffer = await fetch(url);
+    // quick precheck
+    if (attachment.type && !supportedTypes.some((type) => attachment.type?.startsWith(type))) {
+      return MessageFormatter.UnsupportedContentType(supportedTypes, attachment.type);
+    }
 
-    mkdirSync(dirPath, { recursive: true });
-    writeFileSync(filePath, Buffer.from(await buffer.arrayBuffer()), { });
+    const proxiedURL = attachment.url.startsWith("https://cdn.discord.com")
+    || attachment.url.startsWith(revoltAutumnURL)
+    || attachment.url.startsWith(revoltJanuaryURL)
+    || attachment.url.startsWith("https://media.discordapp.net")
+      ? attachment.url
+      : attachment.proxy_url;
+    if (!proxiedURL) return ErrorMessages.UnproxiedAttachment;
+
+    const filePath = path.join(dirPath, attachment.discord_id ?? attachment.id);
+    const response = await fetch(proxiedURL);
+    const buffer = Buffer.from(await response.arrayBuffer());
+
+    const mimeType = await fileTypeFromBuffer(buffer);
+    if (!mimeType) return ErrorMessages.UndetectableMimeType;
+
+    if (!supportedTypes.some((type) => mimeType.mime.startsWith(type))) {
+      return MessageFormatter.UnsupportedContentType(supportedTypes, mimeType.mime);
+    }
+
+    await mkdir(dirPath, { recursive: true });
+    await writeFile(filePath, buffer);
 
     const transcript = (await nodewhisper(filePath, {
       modelName: "base.en",
@@ -50,7 +77,7 @@ export default class Transcribe extends BaseCommand {
     name: "attachment",
     description: "The attachment to transcribe. Must be valid x-audio or x-video.",
     type: CommandParameterTypes.Attachment,
-    optional: false,
+    optional: true,
   }, {
     name: "url",
     description: "The URL to an attachment to transcribe. Must be valid x-audio or x-video.",

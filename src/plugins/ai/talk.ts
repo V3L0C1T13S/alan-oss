@@ -1,6 +1,6 @@
 import { AttachmentBuilder } from "discord.js";
 import {
-  Logger, BaseCommand, CommandParameter, CommandParameterTypes, isOwner,
+  Logger, BaseCommand, CommandParameter, CommandParameterTypes,
 } from "../../common/index.js";
 import {
   ErrorMessages,
@@ -8,7 +8,7 @@ import {
 
 const maxMessageLength = 2000;
 
-export default class AITalk extends BaseCommand {
+export default class Talk extends BaseCommand {
   static private = true;
 
   async run() {

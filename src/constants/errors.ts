@@ -5,6 +5,10 @@ export const ErrorMessages = {
   AIError: "An error occurred while the AI was processing.",
   NotEnoughArgs: "Not enough arguments.",
   DeveloperOnlyCommand: "This command is for developers only.",
+  UnproxiedAttachment: "This attachment is unproxied, and can't be downloaded.",
+  NeedsAudioOrVideo: "Please attach audio or video.",
+  UnsupportedContentType: "This content type is not supported.",
+  UndetectableMimeType: "Couldn't detect a mime type for this contents.",
 };
 
 export const Messages = {

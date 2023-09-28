@@ -15,7 +15,7 @@ export default class help extends BaseCommand {
         .setDescription(command.description)
         .setFields({
           name: "Params",
-          value: command.parameters.map((x) => `${x.name} ${x.description}`).join("\n"),
+          value: command.parameters.map((x) => `${x.name} - ${x.description}`).join("\n") || "No params.",
         });
 
       return {
