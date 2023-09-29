@@ -1,4 +1,6 @@
 import dotenv from "dotenv";
+import path from "node:path";
+import os from "node:os";
 
 dotenv.config();
 
@@ -10,6 +12,10 @@ export const revoltToken = process.env.REVOLT_TOKEN;
 export const bardCookie = process.env.BARD_COOKIE;
 export const bardPSIDTS = process.env.BARD_PSIDTS;
 
+export const tiktokSessionId = process.env.TIKTOK_SESSION;
+
+export const alanTmpDir = path.join(os.tmpdir(), "alan-tmp");
+
 export const reflectcordAPIURL = process.env.REFLECTCORD_API_URL ?? "http://localhost:3000/api";
 export const revoltBaseURL = process.env.REVOLT_BASE_URL ?? "https://api.revolt.chat";
 export const revoltAutumnURL = process.env.REVOLT_AUTUMN_URL ?? "https://autumn.revolt.chat";
@@ -20,8 +26,6 @@ export const aiBackend = process.env.AI_BACKEND ?? "bard";
 export const dbBackend = process.env.DB_BACKEND ?? "sql";
 
 export const mongoURL = "mongodb://localhost:27017";
-
-export const tiktokSessionId = process.env.TIKTOK_SESSION;
 
 export const discordOwnerId = process.env.DISCORD_OWNER_ID;
 export const revoltOwnerId = process.env["REVOLT_OWNER_ID"];

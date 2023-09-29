@@ -8,10 +8,10 @@ import {
   BaseCommand, CommandParameter, CommandParameterTypes, MessageFormatter,
 } from "../../common/index.js";
 import {
-  ErrorMessages, Messages, revoltAutumnURL, revoltJanuaryURL,
+  ErrorMessages, Messages, alanTmpDir, revoltAutumnURL, revoltJanuaryURL,
 } from "../../constants/index.js";
 
-const dirPath = path.join(os.tmpdir(), "alan-tmp/audio");
+const dirPath = path.join(alanTmpDir, "audio");
 const MaxMessageLength = 1500;
 
 const supportedTypes = ["audio", "video"];

@@ -11,15 +11,23 @@ const maxMessageLength = 2000;
 export default class Talk extends BaseCommand {
   static private = true;
 
+  static description = "Talk to the AI.";
+  static parameters: CommandParameter[] = [{
+    name: "prompt",
+    description: "The prompt to send to the AI.",
+    type: CommandParameterTypes.String,
+    optional: false,
+  }];
+
   async run() {
     const prompt = this.args?.subcommands?.prompt ?? this.joinArgsToString();
     if (!prompt) return ErrorMessages.NotEnoughArgs;
 
-    Logger.log(prompt);
-
     try {
       await this.ack();
-      const response = await this.bot.aiManager.ask(prompt.toString());
+
+      const conversation = await this.bot.aiManager.getOrCreateCurrentConversation(this.author.id);
+      const response = await conversation.ask(prompt.toString());
 
       if (response.length > maxMessageLength) {
         return {
@@ -34,12 +42,4 @@ export default class Talk extends BaseCommand {
       return ErrorMessages.AIError;
     }
   }
-
-  static description = "Talk to the AI.";
-  static parameters: CommandParameter[] = [{
-    name: "prompt",
-    description: "The prompt to send to the AI.",
-    type: CommandParameterTypes.String,
-    optional: false,
-  }];
 }

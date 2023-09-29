@@ -1,7 +1,6 @@
 import {
   ActivityType,
   ApplicationCommandOptionType,
-  ApplicationCommandType,
   AttachmentBuilder,
   Client,
   ClientOptions,
@@ -19,6 +18,7 @@ import {
   SlashCommandChannelOption,
   SlashCommandNumberOption,
   SlashCommandStringOption,
+  SlashCommandSubcommandBuilder,
   SlashCommandUserOption,
   User,
 } from "discord.js";
@@ -37,11 +37,11 @@ import {
 import { PluginManager } from "./managers/index.js";
 import parseCommand from "./common/utils/parseCommandV2.js";
 import {
-  BaseDatabaseModel, CommandArguments, CommandParameterTypes, SqlDatabaseManager,
+  BaseDatabaseModel, CommandArguments, CommandParameterTypes,
 } from "./common/index.js";
 import { MusicSubsystem } from "./common/utils/music/MusicSubsystem.js";
 import {
-  Logger, BaseAIManager, BardAIManager, isOwner, canExecuteCommand, createDatabase, createAIManager,
+  Logger, BaseAIManager, canExecuteCommand, createDatabase, createAIManager,
 } from "./common/utils/index.js";
 
 export class Bot {
@@ -186,7 +186,14 @@ export class Bot {
 
                   break;
                 }
-                default: Logger.error(`Unhandled param type ${param.type}`);
+                case CommandParameterTypes.Subcommand: {
+                  const option = new SlashCommandSubcommandBuilder()
+                    .setName(param.name)
+                    .setDescription(param.description);
+
+                  break;
+                }
+                default: Logger.error("Unhandled param:", param);
               }
             } catch (e) {
               Logger.error(`Incorrectly formatted param ${param.name} in ${command.name}`, e);
@@ -239,7 +246,6 @@ export class Bot {
     const text = message.content.substring(botPrefix.length);
     const preArgs = text.split(/\s+/g);
     const commandName = preArgs.shift()?.toLowerCase();
-    Logger.log("ok", commandName, preArgs);
     if (!commandName) return;
 
     const Cmd = this.pluginManager.commands.get(commandName);
@@ -295,6 +301,7 @@ export class Bot {
           }
           case ApplicationCommandOptionType.Attachment: break;
           case ApplicationCommandOptionType.User: break;
+          case ApplicationCommandOptionType.Subcommand: break;
           default: Logger.error(`Unhandled option type ${option.type}`);
         }
       });

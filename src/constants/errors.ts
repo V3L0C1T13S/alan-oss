@@ -2,7 +2,12 @@ export const ErrorMessages = {
   AvatarNotFound: "No avatar found.",
   ErrorOccurred: "An error occurred!",
   ErrorInErrorHandler: "Error occurred in error handler.",
+
   AIError: "An error occurred while the AI was processing.",
+  AIConversationNotFound: "Conversation not found.",
+
+  TTSFailed: "Failed to convert text to speech.",
+
   NotEnoughArgs: "Not enough arguments.",
   DeveloperOnlyCommand: "This command is for developers only.",
   UnproxiedAttachment: "This attachment is unproxied, and can't be downloaded.",

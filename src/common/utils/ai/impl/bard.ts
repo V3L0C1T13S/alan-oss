@@ -41,6 +41,12 @@ export class BardAIManager extends BaseAIManager<any, BardResponse, BardPrompt> 
     const chat = this.bard.createChat();
     const conversation = new BardConversation(id, chat, owner);
 
+    if (owner) {
+      this.users.set(owner, {
+        id: owner,
+      });
+    }
+
     this.conversations.set(id, conversation);
 
     return conversation;
@@ -71,5 +77,9 @@ export class BardAIManager extends BaseAIManager<any, BardResponse, BardPrompt> 
     const current = this.getConversation(user.current_conversation);
 
     return current;
+  }
+
+  async closeConversation(id: string) {
+    this.conversations.delete(id);
   }
 }

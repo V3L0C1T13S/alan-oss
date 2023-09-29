@@ -15,6 +15,14 @@ export abstract class BaseAIManager<initParams = any, promptReturn = string, pro
   abstract getCurrentConversation(owner: string): Promise<Conversation | undefined>
 
   async getOrCreateCurrentConversation(owner: string): Promise<Conversation> {
-    return (await this.getCurrentConversation(owner)) ?? this.createConversation(owner);
+    const existing = await this.getCurrentConversation(owner);
+
+    if (existing) return existing;
+
+    const conversation = await this.createConversation(owner);
+    await this.setCurrentConversation(owner, conversation.id);
+    return conversation;
   }
+
+  abstract closeConversation(id: string): Promise<void>
 }
