@@ -6,7 +6,9 @@ import { AttachmentBuilder } from "discord.js";
 import {
   CommandParameter, CommandParameterTypes, BaseCommand, initParameters, Logger,
 } from "../../common/index.js";
-import { ErrorMessages, alanTmpDir, tiktokSessionId } from "../../constants/index.js";
+import {
+  ErrorMessages, alanTmpDir, tikTokAPIURL, tiktokSessionId,
+} from "../../constants/index.js";
 
 const tiktokTempDir = path.join(alanTmpDir, "tiktok-audio");
 
@@ -22,13 +24,13 @@ export default class TiktokTTS extends BaseCommand {
     await this.ack();
 
     try {
-      await tiktok.createAudioFromText(text, tiktokTempDir);
+      await tiktok.createAudioFromText(text, filePath);
 
       const buffer = await readFile(`${filePath}.mp3`);
 
       const attachment = new AttachmentBuilder(buffer)
         .setName("tts.mp3")
-        .setDescription(`${text} as TikTok text to speech.`);
+        .setDescription(`"${text}" as TikTok text to speech.`);
 
       return {
         content: "Done!",
@@ -47,7 +49,7 @@ export default class TiktokTTS extends BaseCommand {
     if (tiktokSessionId) {
       await mkdir(tiktokTempDir, { recursive: true });
 
-      tiktok.config(tiktokSessionId);
+      tiktok.config(tiktokSessionId, tikTokAPIURL);
     }
 
     return this;

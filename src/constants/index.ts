@@ -20,6 +20,8 @@ export const reflectcordAPIURL = process.env.REFLECTCORD_API_URL ?? "http://loca
 export const revoltBaseURL = process.env.REVOLT_BASE_URL ?? "https://api.revolt.chat";
 export const revoltAutumnURL = process.env.REVOLT_AUTUMN_URL ?? "https://autumn.revolt.chat";
 export const revoltJanuaryURL = process.env.REVOLT_JANUARY_URL ?? "https://january.revolt.chat";
+export const tikTokAPIURL = process.env.TIKTOK_API_URL ?? "https://api16-normal-useast5.us.tiktokv.com/media/api/text/speech/invoke";
+
 export const botPrefix = process.env.BOT_PREFIX ?? "a!";
 
 export const aiBackend = process.env.AI_BACKEND ?? "bard";
