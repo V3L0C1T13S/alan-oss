@@ -1,3 +1,4 @@
+import { Logger } from "../../../logger.js";
 import { BaseDatabaseModel } from "../../model/index.js";
 
 export class DummyDatabaseManager extends BaseDatabaseModel {
@@ -6,20 +7,20 @@ export class DummyDatabaseManager extends BaseDatabaseModel {
   };
 
   async init() {
-    console.log("DummyDatabaseInit");
+    Logger.info("DummyDatabaseInit");
   }
 
   async getCounts() {
-    console.log("getCounts", this.data.counts);
+    Logger.info("getCounts", this.data.counts);
 
     return this.data["counts"];
   }
 
   async addCount(name: string) {
-    console.log(`addCount ${name}`);
+    Logger.info(`addCount ${name}`);
   }
 
   async stop() {
-    console.log("DummyDatabaseStop");
+    Logger.info("DummyDatabaseStop");
   }
 }

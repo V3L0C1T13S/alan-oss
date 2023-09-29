@@ -41,7 +41,7 @@ import {
 } from "./common/index.js";
 import { MusicSubsystem } from "./common/utils/music/MusicSubsystem.js";
 import {
-  Logger, BaseAIManager, BardAIManager, isOwner, canExecuteCommand,
+  Logger, BaseAIManager, BardAIManager, isOwner, canExecuteCommand, createDatabase, createAIManager,
 } from "./common/utils/index.js";
 
 export class Bot {
@@ -72,14 +72,12 @@ export class Bot {
   pluginManager = new PluginManager(this);
 
   database: BaseDatabaseModel;
-  aiManager: BaseAIManager = new BardAIManager();
+  aiManager: BaseAIManager = createAIManager();
 
   music: MusicSubsystem = new MusicSubsystem(this);
 
   constructor() {
     if (!discordToken && !revoltToken) throw new Error("No tokens found.");
-
-    this.database = new SqlDatabaseManager(this);
 
     this.discordClient = new Client(this.discordClientOptions);
     this.revoltClient = new Client({
@@ -89,6 +87,9 @@ export class Bot {
       },
     });
     this.rawRevoltClient = new RevoltClient(revoltBaseURL);
+
+    // DB may expect a fully constructed bot. Create it last.
+    this.database = createDatabase(this);
   }
 
   async init() {

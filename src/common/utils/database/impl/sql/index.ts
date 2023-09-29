@@ -45,11 +45,13 @@ export class SqlDatabaseManager extends BaseDatabaseModel {
   async setupSql() {
     const existingCommands = this.connection.prepare("SELECT command FROM counts").all().map((x: any) => x.command);
     const commandNames = [...this.bot.pluginManager.commands.keys()];
+    // eslint-disable-next-line no-restricted-syntax
     for (const command of existingCommands) {
       if (!commandNames.includes(command)) {
         this.connection.prepare("DELETE FROM counts WHERE command = ?").run(command);
       }
     }
+    // eslint-disable-next-line no-restricted-syntax
     for (const command of commandNames) {
       if (!existingCommands.includes(command)) {
         this.connection.prepare("INSERT INTO counts (command, count) VALUES (?, ?)").run(command, 0);
@@ -68,6 +70,7 @@ export class SqlDatabaseManager extends BaseDatabaseModel {
     } else if (version < latestVersion) {
       console.info(`Migrating SQLite database at ${process.env.DB}, which is currently at version ${version}...`);
       while (version < latestVersion) {
+        // eslint-disable-next-line no-plusplus
         version++;
         console.info(`Running version ${version} update script...`);
         this.connection.exec(updates[version]!);
@@ -91,6 +94,7 @@ export class SqlDatabaseManager extends BaseDatabaseModel {
   async getCounts() {
     const counts: any = this.connection.prepare("SELECT * FROM counts").all();
     const countObject: CommandCounts = {};
+    // eslint-disable-next-line no-restricted-syntax
     for (const { command, count } of counts) {
       countObject[command] = count;
     }

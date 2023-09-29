@@ -16,6 +16,11 @@ export const revoltAutumnURL = process.env.REVOLT_AUTUMN_URL ?? "https://autumn.
 export const revoltJanuaryURL = process.env.REVOLT_JANUARY_URL ?? "https://january.revolt.chat";
 export const botPrefix = process.env.BOT_PREFIX ?? "a!";
 
+export const aiBackend = process.env.AI_BACKEND ?? "bard";
+export const dbBackend = process.env.DB_BACKEND ?? "sql";
+
+export const mongoURL = "mongodb://localhost:27017";
+
 export const tiktokSessionId = process.env.TIKTOK_SESSION;
 
 export const discordOwnerId = process.env.DISCORD_OWNER_ID;

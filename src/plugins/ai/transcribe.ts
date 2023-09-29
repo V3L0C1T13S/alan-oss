@@ -28,10 +28,10 @@ export default class Transcribe extends BaseCommand {
       return MessageFormatter.UnsupportedContentType(supportedTypes, attachment.type);
     }
 
-    const proxiedURL = attachment.url.startsWith("https://cdn.discord.com")
+    const proxiedURL = attachment.url.startsWith("https://cdn.discordapp.com")
+    || attachment.url.startsWith("https://media.discordapp.net")
     || attachment.url.startsWith(revoltAutumnURL)
     || attachment.url.startsWith(revoltJanuaryURL)
-    || attachment.url.startsWith("https://media.discordapp.net")
       ? attachment.url
       : attachment.proxy_url;
     if (!proxiedURL) return ErrorMessages.UnproxiedAttachment;
