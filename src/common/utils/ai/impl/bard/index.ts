@@ -1,8 +1,8 @@
 import Bard from "bard-ai";
 import { ulid } from "ulid";
-import { bardCookie, bardPSIDTS } from "../../../../constants/index.js";
-import { BaseAIManager } from "../model/index.js";
-import { Logger } from "../../logger.js";
+import { bardCookie, bardPSIDTS } from "../../../../../constants/index.js";
+import { BaseAIManager } from "../../model/index.js";
+import { Logger } from "../../../logger.js";
 import { BardConversation } from "./conversation.js";
 import { AIUser } from "./types.js";
 
@@ -41,7 +41,7 @@ export class BardAIManager extends BaseAIManager<any, BardResponse, BardPrompt> 
     const chat = this.bard.createChat();
     const conversation = new BardConversation(id, chat, owner);
 
-    if (owner) {
+    if (owner && !this.users.get(owner)) {
       this.users.set(owner, {
         id: owner,
       });

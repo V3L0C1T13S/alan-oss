@@ -1,5 +1,5 @@
 import { IAskResponseJSON, TAskConfig, TIds } from "bard-ai";
-import { Conversation } from "../model/index.js";
+import { Conversation } from "../../model/index.js";
 
 // TODO: pr bard-ai to export this class
 declare class Chat {

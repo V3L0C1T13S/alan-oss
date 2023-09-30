@@ -1,1 +1,1 @@
-export * from "./bard.js";
+export * from "./bard/index.js";
