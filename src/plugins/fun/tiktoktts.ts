@@ -17,6 +17,7 @@ export default class TiktokTTS extends BaseCommand {
     if (!tiktokSessionId) return "This bot's host hasn't properly configured TikTok TTS yet.";
 
     const text = this.args?.subcommands?.text ?? this.joinArgsToString();
+    const voice = this.args?.subcommands?.voice;
     if (typeof text !== "string") return ErrorMessages.NotEnoughArgs;
 
     const filePath = path.join(tiktokTempDir, ulid());
@@ -24,7 +25,7 @@ export default class TiktokTTS extends BaseCommand {
     await this.ack();
 
     try {
-      await tiktok.createAudioFromText(text, filePath);
+      await tiktok.createAudioFromText(text, filePath, voice?.toString());
 
       const buffer = await readFile(`${filePath}.mp3`);
 
@@ -60,5 +61,10 @@ export default class TiktokTTS extends BaseCommand {
     name: "text",
     description: "The text to generate TTS for.",
     type: CommandParameterTypes.String,
+  }, {
+    name: "voice",
+    description: "The voice to use for TTS.",
+    type: CommandParameterTypes.String,
+    optional: true,
   }];
 }
