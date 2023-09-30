@@ -46,7 +46,7 @@
     "nodejs-whisper": "^0.1.4",
     "revoice.js": "^0.1.7537",
     "revolt.js": "7.0.0-beta.9",
-    "tiktok-tts": "^1.1.12",
+    "tiktok-tts": "github:V3L0C1T13S/tiktok-tts#alan-oss",
     "tslib": "^2.6.2",
     "ulid": "^2.3.0",
     "utf-8-validate": "^6.0.3",
