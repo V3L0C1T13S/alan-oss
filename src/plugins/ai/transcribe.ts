@@ -1,4 +1,3 @@
-import os from "node:os";
 import path from "node:path";
 import { nodewhisper } from "nodejs-whisper";
 import { AttachmentBuilder } from "discord.js";
