@@ -58,7 +58,8 @@ interface FullGenericReply {
     attachments?: APIAttachment[],
 }
 
-type GenericReply = FullGenericReply | string;
+// null == "i will handle replying myself"
+type GenericReply = FullGenericReply | string | null;
 
 export interface initParameters {
   bot: Bot;

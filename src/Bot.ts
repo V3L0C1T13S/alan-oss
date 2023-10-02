@@ -273,6 +273,8 @@ export class Bot {
       files: [new AttachmentBuilder(Buffer.from(`${e}`)).setName("error.txt")],
     }));
 
+    if (!result) return;
+
     await message.reply(result).catch((e) => Logger.error(ErrorMessages.ErrorInErrorHandler, e));
   }
 
@@ -320,6 +322,8 @@ export class Bot {
       });
 
       const result = await commandClass.run();
+
+      if (!result) return;
 
       await (interaction.deferred ? interaction.followUp(result) : interaction.reply(result))
         .catch((e: unknown) => {

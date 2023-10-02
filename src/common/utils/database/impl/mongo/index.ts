@@ -1,27 +1,27 @@
-import Mongoose from "mongoose";
+import mongoose from "mongoose";
 import { BaseDatabaseModel, CommandCounts } from "../../model/index.js";
 import { Bot } from "../../../../../Bot.js";
-import { Counts } from "./counts.js";
+import { CommandCount } from "./counts.js";
 import { Logger } from "../../../logger.js";
 import { mongoURL } from "../../../../../constants/index.js";
 
 export class MongoDbManager extends BaseDatabaseModel {
-  connection: Mongoose.Mongoose;
+  connection: mongoose.Mongoose;
 
   constructor(bot: Bot) {
     super(bot);
 
-    this.connection = Mongoose;
+    this.connection = mongoose;
   }
 
   async init() {
-    await this.connection.connect(mongoURL);
+    await this.connection.connect(`${mongoURL}/alan-oss`);
 
     Logger.success("Connected to MongoDB.");
   }
 
   async getCounts() {
-    const dbCounts = await Counts.find();
+    const dbCounts = await CommandCount.find();
     const countObject: CommandCounts = {};
 
     dbCounts.forEach((count) => {
@@ -35,8 +35,8 @@ export class MongoDbManager extends BaseDatabaseModel {
   }
 
   async addCount(name: string) {
-    const existing = await Counts.findOne({ name });
-    await Counts.updateOne({
+    const existing = await CommandCount.findOne({ name });
+    await CommandCount.updateOne({
       name,
     }, {
       name,

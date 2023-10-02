@@ -1,5 +1,7 @@
 import { EmbedBuilder } from "discord.js";
-import { BaseCommand, CommandParameter, CommandParameterTypes } from "../../common/index.js";
+import {
+  BaseCommand, CommandParameter, CommandParameterTypes, paginate,
+} from "../../common/index.js";
 import { botPrefix } from "../../constants/index.js";
 
 export default class help extends BaseCommand {
@@ -36,23 +38,35 @@ export default class help extends BaseCommand {
         commandMap.set(command.category, category);
       });
 
-    const embed = new EmbedBuilder();
-    embed.setAuthor({
-      name: "Help",
-    });
-    embed.setTitle(prefix);
-    embed.setDescription("Commands");
-    embed.setFooter({
-      text: "Tip: Add a command argument to get more help on a command!",
-    });
-    embed.addFields([...commandMap.entries()].map(([category, x]) => ({
-      name: category,
-      value: x.map((command) => `**${command.name.toLowerCase()}** - ${(command as any).description}`).join("\n"),
-    })));
+    const embeds = [...commandMap.entries()].map(([category, cmds]) => {
+      const embed = new EmbedBuilder();
+      embed.setAuthor({
+        name: "Help",
+      });
+      embed.setTitle(prefix);
+      embed.setDescription(category);
+      embed.setFooter({
+        text: "Tip: Add a command argument to get more help on a command!",
+      });
 
-    return {
-      embeds: [embed.toJSON()],
-    };
+      embed.addFields({
+        name: "Commands",
+        value: cmds.map((command) => `**${command.name.toLowerCase()}** - ${(command as any).description}`).join("\n"),
+      });
+
+      return embed.toJSON();
+    });
+
+    const options: any = {};
+    if (this.message) options.message = this.message;
+    if (this.interaction) options.interaction = this.interaction;
+
+    await paginate(this.client, {
+      ...options,
+      author: this.author,
+    }, embeds);
+
+    return null;
   }
 
   static parameters: CommandParameter[] = [{
