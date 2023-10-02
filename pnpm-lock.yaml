@@ -42,8 +42,8 @@ dependencies:
     specifier: ^7.5.3
     version: 7.5.3
   nodejs-whisper:
-    specifier: ^0.1.4
-    version: 0.1.4
+    specifier: https://github.com/V3L0C1T13S/nodejs-whisper/releases/download/0.1.3-patch-1/nodejs-whisper-0.1.3.tgz
+    version: '@github.com/V3L0C1T13S/nodejs-whisper/releases/download/0.1.3-patch-1/nodejs-whisper-0.1.3.tgz'
   revoice.js:
     specifier: ^0.1.7537
     version: 0.1.7537(bufferutil@4.0.7)(prop-types@15.8.1)(react-dom@17.0.2)(react@17.0.2)(utf-8-validate@6.0.3)
@@ -3669,17 +3669,6 @@ packages:
     resolution: {integrity: sha512-uYr7J37ae/ORWdZeQ1xxMJe3NtdmqMC/JZK+geofDrkLUApKRHPd18/TxtBOJ4A0/+uUIliorNrfYV6s1b02eQ==}
     dev: false
 
-  /nodejs-whisper@0.1.4:
-    resolution: {integrity: sha512-V3cRV+K4hA4TGTgGxAcz3+zDPfPgD2e82KXojgS3Tgbw4RLnirzE1DdiW9hFrcuR3/6pyr7sXvctYhZUV4asvQ==}
-    hasBin: true
-    dependencies:
-      ffmpeg-static: 5.2.0
-      readline-sync: 1.4.10
-      shelljs: 0.8.5
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /nodemon@3.0.1:
     resolution: {integrity: sha512-g9AZ7HmkhQkqXkRc20w+ZfQ73cHLbE8hnPbtaFbFtCumZsjyMhKk9LajQ07U5Ux28lvFjZ5X7HvWR1xzU8jHVw==}
     engines: {node: '>=10'}
@@ -5271,6 +5260,20 @@ packages:
     requiresBuild: true
     dependencies:
       nan: 2.18.0
+    dev: false
+
+  '@github.com/V3L0C1T13S/nodejs-whisper/releases/download/0.1.3-patch-1/nodejs-whisper-0.1.3.tgz':
+    resolution: {tarball: https://github.com/V3L0C1T13S/nodejs-whisper/releases/download/0.1.3-patch-1/nodejs-whisper-0.1.3.tgz}
+    name: nodejs-whisper
+    version: 0.1.3
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      ffmpeg-static: 5.2.0
+      readline-sync: 1.4.10
+      shelljs: 0.8.5
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   github.com/V3L0C1T13S/tiktok-tts/0d0ec8c712705fed8f22c5914d702f857bfaedf2:
