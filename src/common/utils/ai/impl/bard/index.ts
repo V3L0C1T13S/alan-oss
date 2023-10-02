@@ -63,9 +63,20 @@ export class BardAIManager extends BaseAIManager<any, BardResponse, BardPrompt> 
     return conversations;
   }
 
+  async getConversationByOwner(owner: string, id: string) {
+    const conversation = this.conversations.get(id);
+
+    if (conversation?.owner !== owner) return;
+
+    return conversation;
+  }
+
   async setCurrentConversation(owner: string, id: string): Promise<void> {
     const user = this.users.get(owner);
     if (!user) throw new Error(`User ${owner} does not exist.`);
+
+    const conversation = await this.getConversationByOwner(owner, id);
+    if (!conversation) throw new Error(`User ${owner} does not have conversation ${id}`);
 
     user.current_conversation = id;
   }

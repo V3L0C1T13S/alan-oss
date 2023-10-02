@@ -1,7 +1,7 @@
 import { BaseCommand, CommandParameter, CommandParameterTypes } from "../../common/index.js";
 import { ErrorMessages } from "../../constants/index.js";
 
-const ops = ["list", "create", "close"];
+const ops = ["list", "create", "close", "switch"];
 
 export default class Conversation extends BaseCommand {
   static private = true;
@@ -21,14 +21,18 @@ export default class Conversation extends BaseCommand {
 
   async run() {
     const op = this.args?.subcommands?.op ?? this.joinArgsToString();
+    const conversationId = this.args?.subcommands?.conversation?.toString();
+
     if (!op) return ErrorMessages.NotEnoughArgs;
 
     if (!ops.includes(op.toString())) return `Unsupported op. Please use one of the following: ${ops.join(", ")}`;
 
+    await this.ack();
+
     switch (op) {
       case "list": {
         return (await this.bot.aiManager.getConversationsByOwner(this.author.id))
-          .map((x) => `${x.id}`)
+          .map((x) => `${x.name}: ${x.id}`)
           .join("\n") || "No conversations.";
       }
       case "create": {
@@ -37,7 +41,6 @@ export default class Conversation extends BaseCommand {
         return `Created conversation \`${conversation.id}\``;
       }
       case "close": {
-        const conversationId = this.args?.subcommands?.conversation;
         if (!conversationId) return ErrorMessages.NotEnoughArgs;
 
         const conversation = (await this.bot.aiManager.getConversationsByOwner(this.author.id))
@@ -47,6 +50,13 @@ export default class Conversation extends BaseCommand {
         await this.bot.aiManager.closeConversation(conversation.id);
 
         return "Conversation closed.";
+      }
+      case "switch": {
+        if (!conversationId) return ErrorMessages.NotEnoughArgs;
+
+        await this.bot.aiManager.setCurrentConversation(this.author.id, conversationId);
+
+        return "Conversation switched.";
       }
       default: return `Unimplemented op ${op}`;
     }

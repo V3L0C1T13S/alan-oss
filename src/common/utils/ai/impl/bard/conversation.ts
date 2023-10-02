@@ -12,14 +12,16 @@ declare class Chat {
 export class BardConversation extends Conversation {
   private chat: Chat;
 
-  constructor(id: string, chat: Chat, owner?: string) {
-    super(id, owner);
+  constructor(id: string, chat: Chat, owner?: string, name?: string) {
+    super(id, owner, name);
 
     this.chat = chat;
   }
 
   async ask(prompt: string) {
     const response = await this.chat.ask(prompt);
+
+    if (!this.name) this.name = prompt;
 
     return typeof response === "string" ? response : response.content;
   }
