@@ -35,7 +35,7 @@ export default class Transcribe extends BaseCommand {
       : attachment.proxy_url;
     if (!proxiedURL) return ErrorMessages.UnproxiedAttachment;
 
-    const filePath = path.join(dirPath, attachment.discord_id ?? attachment.id);
+    const filePath = path.join(dirPath, attachment.id);
     const response = await fetch(proxiedURL);
     const buffer = Buffer.from(await response.arrayBuffer());
 
