@@ -85,9 +85,7 @@ export class BardAIManager extends BaseAIManager<any, BardResponse, BardPrompt> 
     const user = this.users.get(owner);
     if (!user?.current_conversation) return;
 
-    const current = this.getConversation(user.current_conversation);
-
-    return current;
+    return this.getConversation(user.current_conversation);
   }
 
   async closeConversation(id: string) {
