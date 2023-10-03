@@ -62,7 +62,13 @@ export class VercelAIManager extends BaseAIManager<any, VercelPrompt, VercelResp
     return conversations;
   }
 
-  async setCurrentConversation(owner: string, id: string): Promise<void> {
+  async getConversationByOwner(owner: string, id: string) {
+    const conversation = await this.getConversation(id);
+    if (conversation?.owner !== owner) return;
+    return conversation;
+  }
+
+  async setCurrentConversation(owner: string, id: string) {
     const user = this.users.get(owner);
     if (!user) throw new Error(`User ${owner} does not exist.`);
 

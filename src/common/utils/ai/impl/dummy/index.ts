@@ -26,6 +26,11 @@ export class DummyAIManager extends BaseAIManager {
 
     const conversation = new DummyConversation(id, owner);
 
+    if (owner) {
+      this.users.set(owner, {
+        id: owner,
+      });
+    }
     this.conversations.set(id, conversation);
 
     return conversation;
@@ -36,18 +41,32 @@ export class DummyAIManager extends BaseAIManager {
   }
 
   async getConversationsByOwner(owner: string): Promise<Conversation[]> {
-    throw new Error("Method not implemented.");
+    return [...this.conversations.values()].filter((x) => x.owner === owner);
+  }
+
+  async getConversationByOwner(owner: string, id: string): Promise<Conversation | undefined> {
+    const conversation = this.conversations.get(id);
+
+    if (conversation?.owner !== owner) return;
+
+    return conversation;
   }
 
   async setCurrentConversation(owner: string, id: string): Promise<void> {
-    throw new Error("Method not implemented.");
+    const user = this.users.get(owner);
+    if (!user) throw new Error("User not found");
+
+    user.current_conversation = id;
   }
 
   async getCurrentConversation(owner: string): Promise<Conversation | undefined> {
-    throw new Error("Method not implemented.");
+    const user = this.users.get(owner);
+    if (!user?.current_conversation) return;
+
+    return this.getConversation(user.current_conversation);
   }
 
   async closeConversation(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
+    this.conversations.delete(id);
   }
 }

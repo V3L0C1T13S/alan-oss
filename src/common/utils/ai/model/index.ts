@@ -9,6 +9,7 @@ export abstract class BaseAIManager<initParams = any, promptReturn = string, pro
 
   abstract createConversation(owner?: string): Promise<Conversation>
   abstract getConversation(id: string): Promise<Conversation | undefined>
+  abstract getConversationByOwner(owner: string, id: string): Promise<Conversation | undefined>
   abstract getConversationsByOwner(owner: string): Promise<Conversation[]>
 
   abstract setCurrentConversation(owner: string, id: string): Promise<void>
