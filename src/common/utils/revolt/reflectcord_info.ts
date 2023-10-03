@@ -2,10 +2,10 @@ import axios from "axios";
 import { reflectcordAPIURL } from "../../../constants/index.js";
 
 interface reflectcordInstanceInfo {
-    ping: string;
-    revolt: {
-        revolt: string,
-    }
+  ping: string;
+  revolt: {
+    revolt: string,
+  }
 }
 
 let info: reflectcordInstanceInfo | undefined;
