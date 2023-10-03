@@ -41,6 +41,8 @@ export class MongoDbManager extends BaseDatabaseModel {
     }, {
       name,
       counts: (existing?.counts ?? 0) + 1,
+    }, {
+      upsert: true,
     });
   }
 
