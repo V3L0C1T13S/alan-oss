@@ -276,6 +276,8 @@ export class Bot {
     if (!result) return;
 
     await message.reply(result).catch((e) => Logger.error(ErrorMessages.ErrorInErrorHandler, e));
+
+    await this.database.addCount(Cmd.name.toLowerCase()).catch((e) => Logger.error(e));
   }
 
   protected async interactionCreate(interaction: Interaction) {
@@ -333,6 +335,8 @@ export class Bot {
             files: [new AttachmentBuilder(Buffer.from(`${e}`)).setName("error.txt")],
           }).catch(Logger.error);
         });
+
+      await this.database.addCount(Cmd.name.toLowerCase()).catch((e) => Logger.error(e));
     }
   }
 }
