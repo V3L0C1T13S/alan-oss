@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 export namespace Logger {
     const FgGreen = "\x1b[32m";
     const FgYellow = "\x1b[33m";
