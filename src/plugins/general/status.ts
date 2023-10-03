@@ -1,15 +1,19 @@
 import { ActivityType } from "discord.js";
-import { BaseCommand } from "../../common/index.js";
-import { revoltOwnerId } from "../../constants/index.js";
+import { BaseCommand, CommandParameter, CommandParameterTypes } from "../../common/index.js";
 
-export default class avatar extends BaseCommand {
+export default class Status extends BaseCommand {
+  static description = "Set the bots status (or reset it)";
+  static parameters: CommandParameter[] = [{
+    name: "status",
+    description: "The status to set the bot to",
+    type: CommandParameterTypes.String,
+    optional: true,
+  }];
+  static private = true;
+
   async run() {
-    if (this.author.id !== revoltOwnerId) return "You don't have permission to do this.";
-
-    if (!this.args?.subcommands) return "You need to give me a status!";
-
-    const status = Object.values(this.args.subcommands).join(" ");
-    if (!status) return "Couldn't reform status args";
+    const status = this.joinArgsToString();
+    if (!status) return "Please give a status.";
 
     this.client.user?.presence.set({
       activities: [{
@@ -20,6 +24,4 @@ export default class avatar extends BaseCommand {
 
     return `Set status to ${status}`;
   }
-
-  static description = "Set the bots status (or reset it)";
 }
