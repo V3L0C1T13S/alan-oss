@@ -1,23 +1,21 @@
 import { Logger } from "../../../logger.js";
-import { BaseDatabaseModel } from "../../model/index.js";
+import { BaseDatabaseModel, CommandCounts } from "../../model/index.js";
 
 export class DummyDatabaseManager extends BaseDatabaseModel {
-  protected data: Record<string, any> = {
-    counts: {},
-  };
+  protected data: CommandCounts = {};
 
   async init() {
     Logger.info("DummyDatabaseInit");
   }
 
   async getCounts() {
-    Logger.info("getCounts", this.data.counts);
-
-    return this.data["counts"];
+    return this.data;
   }
 
   async addCount(name: string) {
-    Logger.info(`addCount ${name}`);
+    let count = this.data[name];
+    if (!count) this.data[name] = 0;
+    else count += 1;
   }
 
   async stop() {
