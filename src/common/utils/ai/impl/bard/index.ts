@@ -4,10 +4,7 @@ import { bardCookie, bardPSIDTS } from "../../../../../constants/index.js";
 import { BaseAIManager } from "../../model/index.js";
 import { Logger } from "../../../logger.js";
 import { BardConversation } from "./conversation.js";
-import { AIUser } from "./types.js";
-
-type BardPrompt = string;
-type BardResponse = string;
+import { AIUser, BardPrompt, BardResponse } from "./types.js";
 
 export class BardAIManager extends BaseAIManager<any, BardResponse, BardPrompt> {
   private bard: Bard;

@@ -4,14 +4,7 @@ import { BaseAIManager } from "../../model/index.js";
 import { VercelConversation } from "./conversation.js";
 import { VercelAPI } from "./vercel_api.js";
 import { Logger } from "../../../logger.js";
-
-type VercelPrompt = string;
-type VercelResponse = string;
-
-type VercelUser = {
-    id: string,
-    current_conversation?: string | null,
-}
+import { VercelPrompt, VercelResponse, VercelUser } from "./types.js";
 
 export class VercelAIManager extends BaseAIManager<any, VercelPrompt, VercelResponse> {
   private api: VercelAPI;

@@ -2,11 +2,7 @@ import { ulid } from "ulid";
 import { Logger } from "../../../logger.js";
 import { BaseAIManager, Conversation } from "../../model/index.js";
 import { DummyConversation } from "./conversation.js";
-
-type DummyUser = {
-    id: string,
-    current_conversation?: string | null,
-}
+import { DummyUser } from "./types.js";
 
 export class DummyAIManager extends BaseAIManager {
   private users: Map<string, DummyUser> = new Map();
