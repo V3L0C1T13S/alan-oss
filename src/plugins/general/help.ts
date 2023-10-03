@@ -64,6 +64,7 @@ export default class help extends BaseCommand {
     await paginate(this.client, {
       ...options,
       author: this.author,
+      client_type: this.clientType,
     }, embeds);
 
     return null;

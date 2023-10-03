@@ -7,6 +7,7 @@ import {
   ComponentType,
   InteractionResponse,
   Message,
+  MessageEditOptions,
   RepliableInteraction,
   User,
 } from "discord.js";
@@ -97,7 +98,6 @@ export async function paginate(client: Client, info: PaginationInfo, pages: APIE
       if (interaction.user.id !== info.author.id) return;
 
       try {
-        // if (!interaction.deferred && !interaction.replied) await interaction.deferReply();
         // FIXME (reflectcord): workaround unimplemented interaction tokens
         if (info.client_type !== "revolt" && !interaction.deferred) await interaction.deferUpdate();
 
@@ -115,28 +115,27 @@ export async function paginate(client: Client, info: PaginationInfo, pages: APIE
           case "delete": {
             collector.stop();
             try {
-              await interaction.deleteReply();
+              if (info.client_type !== "revolt") await interaction.deleteReply();
+              else await response.delete();
             } catch {
               // nop
             }
 
             return;
           }
-          default: {
-            await interaction.editReply(`Unhandled ID ${interaction.customId}`);
-          }
+          default: break;
         }
 
         const newPage = pages[pageNumber];
-        if (!newPage) {
-          await interaction.editReply("Page doesn't exist.");
-          return;
-        }
+        if (!newPage) return;
 
-        await interaction.editReply({
+        const editBody: MessageEditOptions = {
           embeds: [newPage],
           components,
-        });
+        };
+
+        if (info.client_type !== "revolt") await interaction.editReply(editBody);
+        else await response.edit(editBody);
 
         collector.resetTimer();
       } catch (e) {
