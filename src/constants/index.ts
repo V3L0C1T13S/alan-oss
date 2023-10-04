@@ -12,6 +12,9 @@ export const revoltToken = process.env.REVOLT_TOKEN;
 export const bardCookie = process.env.BARD_COOKIE;
 export const bardPSIDTS = process.env.BARD_PSIDTS;
 
+export const llamaBin = process.env.LLAMA_BIN;
+export const llamaModel = process.env.LLAMA_MODEL;
+
 export const vercelSession = process.env.VERCEL_SESSION;
 export const vercelPlaygroundId = process.env.VERCEL_PLAYGROUND_ID;
 

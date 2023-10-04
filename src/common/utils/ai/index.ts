@@ -1,6 +1,8 @@
 import { aiBackend } from "../../../constants/index.js";
 import { Logger } from "../logger.js";
-import { BardAIManager, VercelAIManager, DummyAIManager } from "./impl/index.js";
+import {
+  BardAIManager, VercelAIManager, DummyAIManager, LlamaAIManager,
+} from "./impl/index.js";
 import { BaseAIManager } from "./model/index.js";
 
 export * from "./impl/index.js";
@@ -14,6 +16,7 @@ export function createAIManager(): BaseAIManager {
     case "vercel": {
       return new VercelAIManager();
     }
+    case "llama": return new LlamaAIManager();
     default: {
       Logger.error(`Unknown AI backend ${aiBackend}. Using dummy backend.`);
 

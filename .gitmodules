@@ -1,0 +1,3 @@
+[submodule "src/common/utils/ai/impl/llama/nodejs-llama-wrapper"]
+	path = src/common/utils/ai/impl/llama/nodejs-llama-wrapper
+	url = https://github.com/V3L0C1T13S/nodejs-llama-wrapper.git

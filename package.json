@@ -31,7 +31,6 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@llama-node/rwkv-cpp": "^0.1.6",
     "axios": "^1.5.1",
     "bard-ai": "^2.0.3",
     "better-sqlite3": "^8.7.0",
