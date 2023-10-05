@@ -240,7 +240,7 @@ export class Bot {
 
   protected async onMessage(message: Message) {
     if (message.author.id === message.client.user.id) return;
-    if (message.author.bot) return;
+    if (message.author.bot || message.webhookId) return;
     if (!message.content.startsWith(botPrefix)) return;
 
     const text = message.content.substring(botPrefix.length);
