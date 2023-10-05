@@ -1,7 +1,7 @@
 import child from "child_process";
 import util from "util";
 
-const exec = util.promisify(child.exec);
+const execFile = util.promisify(child.execFile);
 
 export class Llama {
   binPath: string;
@@ -25,7 +25,11 @@ export class Llama {
   }
 
   async ask(prompt: string): Promise<string> {
-    const { stdout } = await exec(`${this.binPath} --simple-io --log-disable -m ${this.modelPath} -n 256 -p "${prompt}"${this.promptFile ? ` -f ${this.promptFile}` : ""}${this.stopText ? ` -r ${this.stopText}` : ""}`);
+    const args: string[] = ["-m", this.modelPath, "--simple-io", "--log-disable", "-n", "256", "-p", prompt];
+    if (this.stopText) args.push("-r", this.stopText);
+    if (this.promptFile) args.push("-f", this.promptFile);
+
+    const { stdout } = await execFile(this.binPath, args);
 
     return stdout;
   }
