@@ -39,7 +39,6 @@ import parseCommand from "./common/utils/parseCommandV2.js";
 import {
   BaseDatabaseModel, CommandArguments, CommandParameterTypes,
 } from "./common/index.js";
-import { MusicSubsystem } from "./common/utils/music/MusicSubsystem.js";
 import {
   Logger, BaseAIManager, canExecuteCommand, createDatabase, createAIManager,
 } from "./common/utils/index.js";
@@ -73,8 +72,6 @@ export class Bot {
 
   database: BaseDatabaseModel;
   aiManager: BaseAIManager = createAIManager();
-
-  music: MusicSubsystem = new MusicSubsystem(this);
 
   constructor() {
     if (!discordToken && !revoltToken) throw new Error("No tokens found.");
