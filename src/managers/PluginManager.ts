@@ -16,6 +16,8 @@ export class PluginManager {
   }
 
   async init() {
+    const start = performance.now();
+
     const categories = readdirSync(pluginDir);
 
     await Promise.all(categories.map(async (category) => {
@@ -42,6 +44,7 @@ export class PluginManager {
       }));
     }));
 
-    Logger.success(`Loaded ${this.commands.size} plugins.`);
+    const end = performance.now();
+    Logger.success(`Loaded ${this.commands.size} plugins in ${end - start}ms.`);
   }
 }
