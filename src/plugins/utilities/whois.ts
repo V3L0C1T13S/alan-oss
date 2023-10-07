@@ -1,13 +1,23 @@
 import { EmbedBuilder } from "discord.js";
 import { CommandParameterTypes, BaseCommand } from "../../common/index.js";
+import { revoltAutumnURL } from "../../constants/index.js";
 
 export default class Whois extends BaseCommand {
+  static description = "Get info about someone";
+  static parameters: typeof BaseCommand["parameters"] = [{
+    name: "user",
+    type: CommandParameterTypes.User,
+    description: "The user to get info on",
+  }];
+
   async run() {
     const user = this.args?.users?.[0];
     if (!user) return "Please mention a user!";
 
-    const embed = new EmbedBuilder();
+    const createdAt = Math.round(user.createdTimestamp / 1000);
+    const avatar = this.clientType === "revolt" ? `${revoltAutumnURL}/avatars/${user.avatar}` : user.avatarURL();
 
+    const embed = new EmbedBuilder();
     embed.setFields(
       {
         name: "Username",
@@ -16,7 +26,7 @@ export default class Whois extends BaseCommand {
       },
       {
         name: "Discriminator",
-        value: user.discriminator,
+        value: user.discriminator === "0" ? "Pomelo" : user.discriminator,
         inline: true,
       },
       {
@@ -26,7 +36,7 @@ export default class Whois extends BaseCommand {
       },
       {
         name: "Creation date",
-        value: user.createdAt.toISOString(),
+        value: `<t:${createdAt}:F>`,
         inline: true,
       },
       {
@@ -34,25 +44,11 @@ export default class Whois extends BaseCommand {
         value: this.clientType,
         inline: true,
       },
-      {
-        name: "Avatar",
-        value: this.clientType === "revolt" ? `https://autumn.revolt.chat/avatars/${user.avatar}` : user.avatarURL() ?? "No avatar found.",
-        inline: true,
-      },
     );
+    if (avatar) embed.setImage(avatar);
 
-    return `ID: ${user.id}
-created at: <t:${Math.round(user.createdTimestamp / 1000)}:F>
-username: ${user.username}
-discriminator: ${user.discriminator}
-avatar url: ${this.clientType === "revolt" ? `https://autumn.revolt.chat/avatars/${user.avatar}` : user.avatarURL() ?? "No avatar found."}
-account type: ${this.clientType}`;
+    return {
+      embeds: [embed.toJSON()],
+    };
   }
-
-  static description = "Get info about someone";
-  static parameters: typeof BaseCommand["parameters"] = [{
-    name: "user",
-    type: CommandParameterTypes.User,
-    description: "The user to get info on",
-  }];
 }
