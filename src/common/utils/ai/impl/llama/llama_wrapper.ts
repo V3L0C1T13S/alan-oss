@@ -10,6 +10,8 @@ export class Llama {
 
   promptFile?: string;
   stopText?: string;
+  threads?: string;
+  ngl?: string;
 
   constructor(binPath: string, modelPath: string) {
     this.binPath = binPath;
@@ -24,10 +26,20 @@ export class Llama {
     this.stopText = text;
   }
 
+  setThreads(count: string | number) {
+    this.threads = count.toString();
+  }
+
+  setNgl(layers: string | number) {
+    this.ngl = layers.toString();
+  }
+
   async ask(prompt: string): Promise<string> {
     const args: string[] = ["-m", this.modelPath, "--simple-io", "--log-disable", "-n", "256", "-p", prompt];
     if (this.stopText) args.push("-r", this.stopText);
     if (this.promptFile) args.push("-f", this.promptFile);
+    if (this.threads) args.push("-t", this.threads);
+    if (this.ngl) args.push("-ngl", this.ngl);
 
     const { stdout } = await execFile(this.binPath, args);
 

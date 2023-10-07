@@ -14,6 +14,8 @@ export const bardPSIDTS = process.env.BARD_PSIDTS;
 
 export const llamaBin = process.env.LLAMA_BIN;
 export const llamaModel = process.env.LLAMA_MODEL;
+export const llamaThreads = process.env.LLAMA_THREADS;
+export const llamaNGL = process.env.LLAMA_NGL;
 
 export const vercelSession = process.env.VERCEL_SESSION;
 export const vercelPlaygroundId = process.env.VERCEL_PLAYGROUND_ID;
@@ -33,11 +35,11 @@ export const botPrefix = process.env.BOT_PREFIX ?? "a!";
 export const aiBackend = process.env.AI_BACKEND ?? "bard";
 export const dbBackend = process.env.DB_BACKEND ?? "sql";
 
-export const mongoURL = "mongodb://localhost:27017";
+export const mongoURL = process.env.MONGO_URL ?? "mongodb://localhost:27017";
 
 export const discordOwnerId = process.env.DISCORD_OWNER_ID;
-export const revoltOwnerId = process.env["REVOLT_OWNER_ID"];
+export const revoltOwnerId = process.env.REVOLT_OWNER_ID;
 
-export const botBrand = process.env["BOT_BRAND"] ?? "Alan OSS";
-export const botPresence = process.env["PRESENCE"] ?? "online";
+export const botBrand = process.env.BOT_BRAND ?? "Alan OSS";
+export const botPresence = process.env.PRESENCE ?? "online";
 export const version = "0.1";
