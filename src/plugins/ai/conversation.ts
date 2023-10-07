@@ -20,12 +20,12 @@ export default class Conversation extends BaseCommand {
   }];
 
   async run() {
-    const op = this.args?.subcommands?.op ?? this.joinArgsToString();
+    const op = this.args?.subcommands?.op?.toString() ?? this.joinArgsToString();
     const conversationId = this.args?.subcommands?.conversation?.toString();
 
     if (!op) return ErrorMessages.NotEnoughArgs;
 
-    if (!ops.includes(op.toString())) return `Unsupported op. Please use one of the following: ${ops.join(", ")}`;
+    if (!ops.includes(op)) return `Unsupported op. Please use one of the following: ${ops.join(", ")}`;
 
     await this.ack();
 
