@@ -1,7 +1,9 @@
 import { ulid } from "ulid";
 import { Logger } from "../../../logger.js";
-import { llamaBin, llamaModel } from "../../../../../constants/index.js";
-import { BaseAIManager, Conversation } from "../../model/index.js";
+import {
+  llamaBin, llamaModel, llamaNGL, llamaThreads,
+} from "../../../../../constants/index.js";
+import { BaseAIManager } from "../../model/index.js";
 import { Llama } from "./llama_wrapper.js";
 import { LlamaUser } from "./types.js";
 import { LlamaConversation } from "./conversation.js";
@@ -29,6 +31,8 @@ export class LlamaAIManager extends BaseAIManager<any, string, string> {
 
     this.llama = new Llama(llamaBin, llamaModel);
     this.llama.setStopText("User:");
+    if (llamaThreads) this.llama.setThreads(llamaThreads);
+    if (llamaNGL) this.llama.setNgl(llamaNGL);
   }
 
   async init() {
@@ -41,7 +45,9 @@ export class LlamaAIManager extends BaseAIManager<any, string, string> {
 
   extractResult(result: string, prompt: string) {
     return result.replaceAll(prompt, "")
-      .replaceAll("User:", "");
+      .replaceAll("User:", "")
+      .replace(/\s+/g, " ")
+      .trim();
   }
 
   async ask(prompt: string) {
