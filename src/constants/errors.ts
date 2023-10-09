@@ -1,5 +1,4 @@
 export const ErrorMessages = {
-  AvatarNotFound: "No avatar found.",
   ErrorOccurred: "An error occurred!",
   ErrorInErrorHandler: "Error occurred in error handler.",
 
@@ -17,6 +16,9 @@ export const ErrorMessages = {
 };
 
 export const Messages = {
+  AvatarNotFound: "No avatar found.",
+  BannerNotFound: "No banner found.",
+
   TooLittleArguments: "Too little arguments.",
   InteractionsNotSupported: "Interactions are not supported for this feature.",
   Unimplemented: "This feature is unimplemented.",

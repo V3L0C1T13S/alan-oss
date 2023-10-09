@@ -1,16 +1,14 @@
-import { revoltAutumnURL } from "../../constants/index.js";
+import { Messages, revoltAutumnURL } from "../../constants/index.js";
 import { CommandParameter, CommandParameterTypes, BaseCommand } from "../../common/index.js";
-
-const BannerNotFound = "No banner found.";
 
 export default class banner extends BaseCommand {
   async run() {
     const user = this.args?.users?.[0] ?? this.author;
-    if (!user.banner) return BannerNotFound;
+    if (!user.banner) return Messages.BannerNotFound;
 
     return this.clientType === "revolt"
       ? `${revoltAutumnURL}/backgrounds/${user.banner}`
-      : user.bannerURL() ?? BannerNotFound;
+      : user.bannerURL() ?? Messages.BannerNotFound;
   }
 
   static description = "Get your (or someone elses) banner URL";

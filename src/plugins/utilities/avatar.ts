@@ -1,25 +1,18 @@
-import { ErrorMessages, revoltAutumnURL } from "../../constants/index.js";
+import { Messages, revoltAutumnURL } from "../../constants/index.js";
 import { BaseCommand, CommandParameter, CommandParameterTypes } from "../../common/index.js";
 
 export default class avatar extends BaseCommand {
   async run() {
     const user = this.args?.users?.[0] ?? this.author;
-    if (!user.avatar) return ErrorMessages.AvatarNotFound;
+    const target = this.args?.subcommands?.server && this.guild
+      ? await this.guild.members.fetch(user)
+      : user;
 
-    if (this.args?.subcommands?.server) {
-      const member = await this.guild?.members.fetch(user);
-      if (member?.avatar) {
-        return this.clientType === "revolt"
-          ? `${revoltAutumnURL}/avatars/${member.avatar}`
-          : member.avatarURL() ?? ErrorMessages.AvatarNotFound;
-      }
-    }
-
-    if (!user.avatar) return ErrorMessages.AvatarNotFound;
+    if (!target.avatar) return Messages.AvatarNotFound;
 
     return this.clientType === "revolt"
-      ? `${revoltAutumnURL}/avatars/${user.avatar}`
-      : user.avatarURL() ?? ErrorMessages.AvatarNotFound;
+      ? `${revoltAutumnURL}/avatars/${target.avatar}`
+      : target.avatarURL() ?? Messages.AvatarNotFound;
   }
 
   static description = "Get your own (or someone elses) avatar URL";
