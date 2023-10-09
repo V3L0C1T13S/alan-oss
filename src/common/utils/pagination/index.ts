@@ -12,7 +12,7 @@ import {
   User,
 } from "discord.js";
 import { Logger } from "../logger.js";
-import { ClientType } from "../../BaseCommand.js";
+import { ClientType } from "../../types/index.js";
 import { TextIcon } from "../icons.js";
 
 export type BasePaginationInfo = {

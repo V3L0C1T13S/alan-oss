@@ -1,7 +1,6 @@
 import {
   APIAttachment,
   APIEmbed,
-  Attachment,
   Channel,
   ChannelType,
   Client,
@@ -17,14 +16,13 @@ import { ulid } from "ulid";
 import { Bot } from "../Bot";
 import { CommandParameter } from "./Parameter.js";
 import { Logger } from "./utils/index.js";
+import { ClientType } from "./types/index.js";
 
 type TextCommandType = "text"
 
 type InteractionCommandType = "interaction";
 
 type CommandType = TextCommandType | InteractionCommandType;
-
-export type ClientType = "discord" | "revolt";
 
 export type CommandArguments = Record<string, string | boolean | number | any[]>;
 
@@ -53,9 +51,9 @@ export interface BaseInteractionCommandOptions extends BaseCommandOptions {
 export type CommandOptions = BaseTextCommandOptions | BaseInteractionCommandOptions;
 
 interface FullGenericReply {
-    content?: string,
-    embeds?: APIEmbed[],
-    attachments?: APIAttachment[],
+  content?: string,
+  embeds?: APIEmbed[],
+  attachments?: APIAttachment[],
 }
 
 // null == "i will handle replying myself"

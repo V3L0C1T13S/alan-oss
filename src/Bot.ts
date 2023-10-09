@@ -40,7 +40,7 @@ import {
   BaseDatabaseModel, CommandArguments, CommandParameterTypes,
 } from "./common/index.js";
 import {
-  Logger, BaseAIManager, canExecuteCommand, createDatabase, createAIManager,
+  Logger, BaseAIManager, canExecuteCommand, createDatabase, createAIManager, SoundPlayerManager,
 } from "./common/utils/index.js";
 
 export class Bot {
@@ -72,6 +72,7 @@ export class Bot {
 
   database: BaseDatabaseModel;
   aiManager: BaseAIManager = createAIManager();
+  soundPlayerManager = new SoundPlayerManager();
 
   constructor() {
     if (!discordToken && !revoltToken) throw new Error("No tokens found.");
@@ -224,7 +225,15 @@ export class Bot {
   }
 
   protected ready(client: Client) {
-    Logger.log(`${this.identifyClient(client)}: ONLINE!`);
+    const clientType = this.identifyClient(client);
+    Logger.log(`${clientType}: ONLINE!`);
+
+    const soundPlayer = this.soundPlayerManager.createPlayer(client, clientType);
+    try {
+      soundPlayer.connect();
+    } catch (e) {
+      Logger.error(`Unable to connect ${clientType} to Lavalink:`, e);
+    }
 
     client.user?.presence.set({
       status: botPresence as PresenceStatusData,

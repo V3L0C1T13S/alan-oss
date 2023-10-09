@@ -47,6 +47,9 @@ dependencies:
   revolt.js:
     specifier: 7.0.0-beta.9
     version: 7.0.0-beta.9(bufferutil@4.0.7)(typescript@5.2.2)(utf-8-validate@6.0.3)
+  shoukaku:
+    specifier: ^3.4.0
+    version: 3.4.0(bufferutil@4.0.7)(utf-8-validate@6.0.3)
   tiktok-tts:
     specifier: github:V3L0C1T13S/tiktok-tts#alan-oss
     version: github.com/V3L0C1T13S/tiktok-tts/0d0ec8c712705fed8f22c5914d702f857bfaedf2
@@ -3651,7 +3654,6 @@ packages:
         optional: true
     dependencies:
       whatwg-url: 5.0.0
-    dev: true
 
   /node-gyp-build@4.6.1:
     resolution: {integrity: sha512-24vnklJmyRS8ViBNI8KbtK/r/DmXQMRiOMXTNz2nrTnAYUwjmEEbnnpB/+kt+yWRv73bPsSPRFddrcIbAxSiMQ==}
@@ -4438,6 +4440,18 @@ packages:
       vscode-textmate: 8.0.0
     dev: false
 
+  /shoukaku@3.4.0(bufferutil@4.0.7)(utf-8-validate@6.0.3):
+    resolution: {integrity: sha512-IxkicImqMy7fu2QDXsQaqajR66oI2xL4FFEKaxIKLSPZTs/51ZlmsevnvwcZdABm+mfVkWFNQJotP1WcBeZ+Dg==}
+    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
+    dependencies:
+      node-fetch: 2.7.0
+      ws: 8.14.2(bufferutil@4.0.7)(utf-8-validate@6.0.3)
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
+    dev: false
+
   /side-channel@1.0.4:
     resolution: {integrity: sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==}
     dependencies:
@@ -4726,7 +4740,6 @@ packages:
 
   /tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
-    dev: true
 
   /tr46@3.0.0:
     resolution: {integrity: sha512-l7FvfAHlcmulp8kr+flpQZmVwtu7nfRV7NZujtN0OqES8EL4O4e0qqzL0DC5gAvx/ZC/9lk6rhcUwYvkBnBnYA==}
@@ -5046,7 +5059,6 @@ packages:
 
   /webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
-    dev: true
 
   /webidl-conversions@7.0.0:
     resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
@@ -5094,7 +5106,6 @@ packages:
     dependencies:
       tr46: 0.0.3
       webidl-conversions: 3.0.1
-    dev: true
 
   /which-boxed-primitive@1.0.2:
     resolution: {integrity: sha512-bwZdv0AKLpplFY2KZRX6TvyuN7ojjr7lwkg6ml0roIy9YeuSr7JS372qlNW18UQYzgYK9ziGcerWqZOmEn9VNg==}
@@ -5255,7 +5266,7 @@ packages:
     dev: false
 
   '@github.com/V3L0C1T13S/nodejs-whisper/releases/download/0.1.3-patch-1/nodejs-whisper-0.1.3.tgz':
-    resolution: {tarball: https://github.com/V3L0C1T13S/nodejs-whisper/releases/download/0.1.3-patch-1/nodejs-whisper-0.1.3.tgz}
+    resolution: {registry: https://registry.npmjs.org/, tarball: https://github.com/V3L0C1T13S/nodejs-whisper/releases/download/0.1.3-patch-1/nodejs-whisper-0.1.3.tgz}
     name: nodejs-whisper
     version: 0.1.3
     hasBin: true

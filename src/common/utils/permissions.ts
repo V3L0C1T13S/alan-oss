@@ -1,5 +1,6 @@
-import { BaseCommandConstructor, ClientType } from "../BaseCommand.js";
+import { ClientType } from "../types/index.js";
 import { discordOwnerId, revoltOwnerId } from "../../constants/index.js";
+import { BaseCommandConstructor } from "../BaseCommand.js";
 
 export function isOwner(id: string, type: ClientType) {
   if (type === "revolt") return id === revoltOwnerId;

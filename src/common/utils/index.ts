@@ -6,3 +6,4 @@ export * from "./ai/index.js";
 export * from "./permissions.js";
 export * from "./pagination/index.js";
 export * from "./icons.js";
+export * from "./sound/index.js";
