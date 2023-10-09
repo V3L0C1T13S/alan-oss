@@ -13,6 +13,8 @@ export class LlamaConversation extends Conversation {
   }
 
   async ask(prompt: string) {
+    if (!this.name) this.name = prompt;
+
     const fullPrompt = this.conversationText
       ? `${this.conversationText} ${prompt}\n${assistantName}:`
       : this.ai.generatePrompt(prompt);
