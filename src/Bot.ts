@@ -218,6 +218,9 @@ export class Bot {
     client.on(Events.ClientReady, (c) => this.ready(c));
     client.on(Events.MessageCreate, (message) => this.onMessage(message));
     client.on(Events.InteractionCreate, (interaction) => this.interactionCreate(interaction));
+    client.on(Events.Error, (error) => {
+      Logger.error("Client error:", error.message);
+    });
   }
 
   identifyClient(client: Client) {
