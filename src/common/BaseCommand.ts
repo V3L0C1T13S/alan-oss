@@ -1,6 +1,7 @@
 import {
   APIAttachment,
   APIEmbed,
+  AttachmentBuilder,
   Channel,
   ChannelType,
   Client,
@@ -54,6 +55,7 @@ interface FullGenericReply {
   content?: string,
   embeds?: APIEmbed[],
   attachments?: APIAttachment[],
+  files?: AttachmentBuilder[],
 }
 
 // null == "i will handle replying myself"
