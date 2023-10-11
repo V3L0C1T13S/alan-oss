@@ -1,4 +1,5 @@
 import { EmbedAuthorOptions, EmbedBuilder } from "discord.js";
+import os from "node:os";
 import { BaseCommand, getReflectcordInstanceInfo, getUserAvatarURL } from "../../common/index.js";
 import { discordOwnerId, revoltOwnerId } from "../../constants/index.js";
 
@@ -37,6 +38,9 @@ export default class info extends BaseCommand {
     }, {
       name: "Backend",
       value: `This instance is running on ${this.clientType === "revolt" ? `Revolt via [Reflectcord](https://github.com/V3L0C1T13S/reflectcord) (Revolt v${reflectcordInfo?.revolt.revolt})` : "Discord"}`,
+    }, {
+      name: "Host",
+      value: `${os.type()} ${os.release()} (${os.arch()})`,
     });
 
     return {
