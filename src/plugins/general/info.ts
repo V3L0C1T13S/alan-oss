@@ -4,6 +4,7 @@ import { discordOwnerId, revoltOwnerId } from "../../constants/index.js";
 
 export default class info extends BaseCommand {
   async run() {
+    await this.ack();
     const reflectcordInfo = this.clientType === "revolt" ? await getReflectcordInstanceInfo() : null;
     // eslint-disable-next-line no-nested-ternary
     const owner = this.clientType === "revolt" && revoltOwnerId

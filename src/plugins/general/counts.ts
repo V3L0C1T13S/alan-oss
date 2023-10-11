@@ -5,6 +5,8 @@ export default class counts extends BaseCommand {
   static description = "Get statistics on popular commands.";
 
   async run() {
+    await this.ack();
+
     const commandCounts = await this.bot.database.getCounts();
 
     const embed = new EmbedBuilder()

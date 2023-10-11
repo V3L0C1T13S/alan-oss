@@ -5,6 +5,8 @@ import {
 
 export default class avatar extends BaseCommand {
   async run() {
+    await this.ack();
+
     const user = this.args?.users?.[0] ?? this.author;
     const target = this.args?.subcommands?.server && this.guild
       ? await this.guild.members.fetch(user)
