@@ -1,4 +1,4 @@
-import { EmbedBuilder } from "discord.js";
+import { EmbedAuthorOptions, EmbedBuilder } from "discord.js";
 import {
   BaseCommand, CommandParameter, CommandParameterTypes, paginate,
 } from "../../common/index.js";
@@ -40,9 +40,13 @@ export default class help extends BaseCommand {
 
     const embeds = [...commandMap.entries()].map(([category, cmds]) => {
       const embed = new EmbedBuilder();
-      embed.setAuthor({
+      const avatarURL = this.client.user?.avatarURL();
+      const author: EmbedAuthorOptions = {
         name: "Help",
-      });
+      };
+      if (avatarURL) author.iconURL = avatarURL;
+
+      embed.setAuthor(author);
       embed.setTitle(prefix);
       embed.setDescription(category);
       embed.setFooter({
