@@ -1,5 +1,7 @@
-import { Messages, revoltAutumnURL } from "../../constants/index.js";
-import { BaseCommand, CommandParameter, CommandParameterTypes } from "../../common/index.js";
+import { Messages } from "../../constants/index.js";
+import {
+  BaseCommand, CommandParameter, CommandParameterTypes, getUserAvatarURL,
+} from "../../common/index.js";
 
 export default class avatar extends BaseCommand {
   async run() {
@@ -8,11 +10,7 @@ export default class avatar extends BaseCommand {
       ? await this.guild.members.fetch(user)
       : user;
 
-    if (!target.avatar) return Messages.AvatarNotFound;
-
-    return this.clientType === "revolt"
-      ? `${revoltAutumnURL}/avatars/${target.avatar}`
-      : target.avatarURL() ?? Messages.AvatarNotFound;
+    return getUserAvatarURL(target, this.clientType) ?? Messages.AvatarNotFound;
   }
 
   static description = "Get your own (or someone elses) avatar URL";

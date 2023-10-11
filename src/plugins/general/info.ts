@@ -1,6 +1,6 @@
-import { EmbedBuilder } from "discord.js";
-import { BaseCommand, getReflectcordInstanceInfo } from "../../common/index.js";
-import { discordOwnerId, revoltAutumnURL, revoltOwnerId } from "../../constants/index.js";
+import { EmbedAuthorOptions, EmbedBuilder } from "discord.js";
+import { BaseCommand, getReflectcordInstanceInfo, getUserAvatarURL } from "../../common/index.js";
+import { discordOwnerId, revoltOwnerId } from "../../constants/index.js";
 
 export default class info extends BaseCommand {
   async run() {
@@ -12,16 +12,18 @@ export default class info extends BaseCommand {
         ? await this.client.users.fetch(discordOwnerId)
         : null;
 
-    const embed = new EmbedBuilder();
+    const embed = new EmbedBuilder()
+      .setTitle("Info");
 
-    embed.setAuthor({
-      name: "Info",
-    });
-    if (this.client.user?.avatar && embed.data.author) {
-      embed.data.author.icon_url = this.clientType === "revolt"
-        ? `${revoltAutumnURL}/avatars/${this.client.user.avatar}`
-        : this.client.user.avatarURL()!;
+    const authorOptions: EmbedAuthorOptions = {
+      name: this.client.user?.username ?? "Info",
+    };
+    const avatarURL = getUserAvatarURL(this.client.user!, this.clientType);
+    if (avatarURL) {
+      authorOptions.iconURL = avatarURL;
     }
+    embed.setAuthor(authorOptions);
+
     if (owner) embed.setDescription(`This instance is hosted by **${owner.username}${owner.discriminator !== "0" ? `#${owner.discriminator}` : ""}** on ${this.clientType}`);
     else embed.setDescription("This instance has no owner. Tell the owner to set his .env correctly!");
 

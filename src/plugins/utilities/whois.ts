@@ -1,6 +1,5 @@
 import { EmbedBuilder } from "discord.js";
-import { CommandParameterTypes, BaseCommand } from "../../common/index.js";
-import { revoltAutumnURL } from "../../constants/index.js";
+import { CommandParameterTypes, BaseCommand, getUserAvatarURL } from "../../common/index.js";
 
 export default class Whois extends BaseCommand {
   static description = "Get info about someone";
@@ -15,7 +14,7 @@ export default class Whois extends BaseCommand {
     if (!user) return "Please mention a user!";
 
     const createdAt = Math.round(user.createdTimestamp / 1000);
-    const avatar = this.clientType === "revolt" ? `${revoltAutumnURL}/avatars/${user.avatar}` : user.avatarURL();
+    const avatar = getUserAvatarURL(user, this.clientType);
 
     const embed = new EmbedBuilder();
     embed.setFields(

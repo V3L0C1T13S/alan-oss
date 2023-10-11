@@ -1,6 +1,6 @@
 import { EmbedAuthorOptions, EmbedBuilder } from "discord.js";
 import {
-  BaseCommand, CommandParameter, CommandParameterTypes, paginate,
+  BaseCommand, CommandParameter, CommandParameterTypes, getUserAvatarURL, paginate,
 } from "../../common/index.js";
 import { botPrefix } from "../../constants/index.js";
 
@@ -40,11 +40,13 @@ export default class help extends BaseCommand {
 
     const embeds = [...commandMap.entries()].map(([category, cmds]) => {
       const embed = new EmbedBuilder();
-      const avatarURL = this.client.user?.avatarURL();
       const author: EmbedAuthorOptions = {
         name: "Help",
       };
-      if (avatarURL) author.iconURL = avatarURL;
+      if (this.client.user) {
+        const avatarURL = getUserAvatarURL(this.client.user, this.clientType);
+        if (avatarURL) author.iconURL = avatarURL;
+      }
 
       embed.setAuthor(author);
       embed.setTitle(prefix);
