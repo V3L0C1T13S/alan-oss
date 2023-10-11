@@ -1,4 +1,4 @@
-import { musicIdentifierBackend } from "constants/index.js";
+import { musicIdentifierBackend } from "../../../../constants/index.js";
 import { AuddIOMusicIdentifier } from "./impl/auddIO/index.js";
 import { BaseMusicIdentifier } from "./model/index.js";
 
