@@ -22,6 +22,9 @@ export const vercelPlaygroundId = process.env.VERCEL_PLAYGROUND_ID;
 
 export const tiktokSessionId = process.env.TIKTOK_SESSION;
 
+export const musicIdentifierBackend = process.env.MUSIC_IDENTIFIER_BACKEND ?? "auddio";
+export const auddIOToken = process.env.AUDDIO_TOKEN;
+
 export const alanTmpDir = path.join(os.tmpdir(), "alan-tmp");
 
 export const reflectcordAPIURL = process.env.REFLECTCORD_API_URL ?? "http://localhost:3000/api";
