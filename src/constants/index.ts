@@ -46,3 +46,7 @@ export const revoltOwnerId = process.env.REVOLT_OWNER_ID;
 export const botBrand = process.env.BOT_BRAND ?? "Alan OSS";
 export const botPresence = process.env.PRESENCE ?? "online";
 export const version = "0.1";
+
+// Experiments
+
+export const useVoiceMessageAudio = process.env.USE_VOICEMESSAGE_AUDIO;

@@ -51,7 +51,7 @@ export interface BaseInteractionCommandOptions extends BaseCommandOptions {
 
 export type CommandOptions = BaseTextCommandOptions | BaseInteractionCommandOptions;
 
-interface FullGenericReply {
+export interface FullGenericReply {
   content?: string,
   embeds?: APIEmbed[],
   attachments?: APIAttachment[],
@@ -59,7 +59,7 @@ interface FullGenericReply {
 }
 
 // null == "i will handle replying myself"
-type GenericReply = FullGenericReply | string | null;
+export type GenericReply = FullGenericReply | string | null;
 
 export interface initParameters {
   bot: Bot;

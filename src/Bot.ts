@@ -221,6 +221,13 @@ export class Bot {
     client.on(Events.Error, (error) => {
       Logger.error("Client error:", error.message);
     });
+    const clientType = this.identifyClient(client);
+    const soundPlayer = this.soundPlayerManager.createPlayer(client, clientType);
+    try {
+      soundPlayer?.connect();
+    } catch (e) {
+      Logger.error(`Unable to connect ${clientType} to Lavalink:`, e);
+    }
   }
 
   identifyClient(client: Client) {
@@ -230,13 +237,6 @@ export class Bot {
   protected ready(client: Client) {
     const clientType = this.identifyClient(client);
     Logger.log(`${clientType}: ONLINE!`);
-
-    const soundPlayer = this.soundPlayerManager.createPlayer(client, clientType);
-    try {
-      soundPlayer.connect();
-    } catch (e) {
-      Logger.error(`Unable to connect ${clientType} to Lavalink:`, e);
-    }
 
     client.user?.presence.set({
       status: botPresence as PresenceStatusData,
