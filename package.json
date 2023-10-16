@@ -37,6 +37,7 @@
     "bufferutil": "^4.0.7",
     "discord.js": "^14.13.0",
     "dotenv": "^16.3.1",
+    "elizabot": "^0.0.3",
     "erlpack": "^0.1.4",
     "file-type": "^18.5.0",
     "llama-node": "^0.1.6",
