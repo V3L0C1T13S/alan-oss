@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  alan-oss:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    volumes:
+      - ./src:/usr/app/src
+      - ./dist:/usr/app/dist
+      - ./resources:/usr/app/resources
+    container_name: alan-oss
+    command: pnpm run start:dev
