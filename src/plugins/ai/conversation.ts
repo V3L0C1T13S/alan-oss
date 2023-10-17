@@ -1,7 +1,7 @@
 import { BaseCommand, CommandParameter, CommandParameterTypes } from "../../common/index.js";
 import { ErrorMessages } from "../../constants/index.js";
 
-const ops = ["list", "create", "close", "switch"];
+const ops = ["list", "create", "close", "switch", "set-template"];
 
 export default class Conversation extends BaseCommand {
   static private = true;
@@ -57,6 +57,22 @@ export default class Conversation extends BaseCommand {
         await this.bot.aiManager.setCurrentConversation(this.author.id, conversationId);
 
         return "Conversation switched.";
+      }
+      case "set-template": {
+        const template = this.args?.subcommands?.template?.toString();
+        if (!conversationId || !template) return ErrorMessages.NotEnoughArgs;
+
+        const conversation = await this.bot.aiManager
+          .getConversationByOwner(this.author.id, conversationId);
+        if (!conversation) return ErrorMessages.AIConversationNotFound;
+
+        try {
+          await conversation.setConversationTemplate(template);
+
+          return "Set conversation template.";
+        } catch (e) {
+          return "Couldn't set conversation template.";
+        }
       }
       default: return `Unimplemented op ${op}`;
     }

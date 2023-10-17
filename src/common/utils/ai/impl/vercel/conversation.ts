@@ -13,4 +13,8 @@ export class VercelConversation extends Conversation {
   async ask(prompt: string) {
     return this.api.generate(prompt);
   }
+
+  async setConversationTemplate(template: string) {
+    throw new Error("Method not implemented.");
+  }
 }

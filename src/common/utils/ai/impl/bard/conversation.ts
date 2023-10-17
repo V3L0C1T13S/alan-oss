@@ -25,4 +25,8 @@ export class BardConversation extends Conversation {
 
     return typeof response === "string" ? response : response.content;
   }
+
+  async setConversationTemplate(template: string): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
 }

@@ -9,4 +9,8 @@ export class ElizaConversation extends Conversation {
 
     return this.eliza.transform(prompt);
   }
+
+  async setConversationTemplate(template: string) {
+    throw new Error("Method not implemented.");
+  }
 }

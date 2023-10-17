@@ -10,4 +10,6 @@ export abstract class Conversation {
   }
 
   abstract ask(prompt: string): Promise<string>
+
+  abstract setConversationTemplate(template: string): Promise<void>
 }

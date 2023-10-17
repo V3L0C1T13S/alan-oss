@@ -4,4 +4,8 @@ export class DummyConversation extends Conversation {
   async ask(prompt: string) {
     return "Dummy response.";
   }
+
+  async setConversationTemplate(template: string) {
+    return;
+  }
 }

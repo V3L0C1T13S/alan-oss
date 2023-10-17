@@ -10,13 +10,13 @@ import { LlamaConversation } from "./conversation.js";
 
 export const assistantName = "Ailsa";
 
-const template = `Transcript of a dialog, where the User interacts with an AI Assistant named ${assistantName}. ${assistantName} is helpful, kind, honest, and never fails to answer the User's requests immediately and with precision.
+const defaultTemplate = `Transcript of a dialog, where the User interacts with an AI Assistant named ${assistantName}. ${assistantName} is helpful, kind, honest, and never fails to answer the User's requests immediately and with precision.
 
 User: Hi, ${assistantName}.
 ${assistantName}: Hello! How may I help you today?
 User: Please tell me the weather.
 ${assistantName}: It is currently sunny out, the temperature is 97 degrees with a wind speed of 20 MPH. It is expected to rain later today.
-User:`;
+User: `;
 
 export class LlamaAIManager extends BaseAIManager<any, string, string> {
   private users: Map<string, LlamaUser> = new Map();
@@ -39,8 +39,8 @@ export class LlamaAIManager extends BaseAIManager<any, string, string> {
     Logger.info("Llama is OK!");
   }
 
-  generatePrompt(prompt: string) {
-    return `${template} ${prompt}\n${assistantName}:`;
+  generatePrompt(prompt: string, template = defaultTemplate) {
+    return `${template}${prompt}\n${assistantName}:`;
   }
 
   extractResult(result: string, prompt: string) {
