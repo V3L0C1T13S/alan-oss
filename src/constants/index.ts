@@ -35,7 +35,7 @@ export const tikTokAPIURL = process.env.TIKTOK_API_URL ?? "https://api16-normal-
 
 export const botPrefix = process.env.BOT_PREFIX ?? "a!";
 
-export const aiBackend = process.env.AI_BACKEND ?? "bard";
+export const aiBackend = process.env.AI_BACKEND ?? "eliza";
 export const dbBackend = process.env.DB_BACKEND ?? "sql";
 
 export const mongoURL = process.env.MONGO_URL ?? "mongodb://localhost:27017";
