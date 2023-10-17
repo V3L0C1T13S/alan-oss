@@ -9,6 +9,10 @@ export namespace Logger {
       console.log(...args);
     }
 
+    export function debug(...args: any[]) {
+      console.debug(...args);
+    }
+
     export function warn(...args: any[]) {
       console.warn(`${FgYellow}%s${Reset}`, ...args);
     }
