@@ -5,8 +5,8 @@ import {
 } from "../../../../../constants/index.js";
 import { BaseAIManager } from "../../model/index.js";
 import { Llama } from "./llama_wrapper.js";
-import { LlamaUser } from "./types.js";
 import { LlamaConversation } from "./conversation.js";
+import { GenericAIConversationManager } from "../../generic/index.js";
 
 export const assistantName = "Ailsa";
 
@@ -19,8 +19,7 @@ ${assistantName}: It is currently sunny out, the temperature is 97 degrees with 
 User: `;
 
 export class LlamaAIManager extends BaseAIManager<any, string, string> {
-  private users: Map<string, LlamaUser> = new Map();
-  private conversations: Map<string, LlamaConversation> = new Map();
+  private conversationManager = new GenericAIConversationManager();
 
   llama: Llama;
 
@@ -31,6 +30,7 @@ export class LlamaAIManager extends BaseAIManager<any, string, string> {
 
     this.llama = new Llama(llamaBin, llamaModel);
     this.llama.setStopText("User:");
+
     if (llamaThreads) this.llama.setThreads(llamaThreads);
     if (llamaNGL) this.llama.setNgl(llamaNGL);
   }
@@ -58,51 +58,33 @@ export class LlamaAIManager extends BaseAIManager<any, string, string> {
   }
 
   async createConversation(owner?: string | undefined) {
-    const id = ulid();
-    const conversation = new LlamaConversation(id, this, owner);
-
-    if (owner) {
-      this.users.set(owner, {
-        id: owner,
-      });
-    }
-
-    this.conversations.set(id, conversation);
+    const conversation = new LlamaConversation(ulid(), this, owner);
+    this.conversationManager.insertConversation(conversation);
 
     return conversation;
   }
 
   async getConversation(id: string) {
-    return this.conversations.get(id);
+    return this.conversationManager.getConversation(id);
   }
 
   async getConversationsByOwner(owner: string) {
-    return [...this.conversations.values()].filter((x) => x.owner === owner);
+    return this.conversationManager.getConversationsByOwner(owner);
   }
 
   async getConversationByOwner(owner: string, id: string) {
-    const conversation = this.conversations.get(id);
-
-    if (conversation?.owner !== owner) return;
-
-    return conversation;
+    return this.conversationManager.getConversationByOwner(owner, id);
   }
 
   async setCurrentConversation(owner: string, id: string) {
-    const user = this.users.get(owner);
-    if (!user) throw new Error("User not found");
-
-    user.current_conversation = id;
+    this.conversationManager.setCurrentConversation(owner, id);
   }
 
   async getCurrentConversation(owner: string) {
-    const user = this.users.get(owner);
-    if (!user?.current_conversation) return;
-
-    return this.getConversation(user.current_conversation);
+    return this.conversationManager.getCurrentConversation(owner);
   }
 
   async closeConversation(id: string): Promise<void> {
-    this.conversations.delete(id);
+    return this.conversationManager.closeConversation(id);
   }
 }
