@@ -17,6 +17,11 @@ export default class Conversation extends BaseCommand {
     description: "The conversation ID to perform the OP on.",
     type: CommandParameterTypes.String,
     optional: true,
+  }, {
+    name: "template",
+    description: "Template to set for the conversation.",
+    type: CommandParameterTypes.String,
+    optional: true,
   }];
 
   async run() {
@@ -43,8 +48,10 @@ export default class Conversation extends BaseCommand {
       case "close": {
         if (!conversationId) return ErrorMessages.NotEnoughArgs;
 
-        const conversation = (await this.bot.aiManager.getConversationsByOwner(this.author.id))
-          .find((x) => x.id === conversationId);
+        const conversation = await this.bot.aiManager.getConversationByOwner(
+          this.author.id,
+          conversationId,
+        );
         if (!conversation) return ErrorMessages.AIConversationNotFound;
 
         await this.bot.aiManager.closeConversation(conversation.id);
