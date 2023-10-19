@@ -1,9 +1,9 @@
 import { Logger } from "../../logger.js";
 import { musicIdentifierBackend } from "../../../../constants/index.js";
-import { AuddIOMusicIdentifier } from "./impl/auddIO/index.js";
-import { DummyMusicIdentifier } from "./impl/dummy/index.js";
+import { AuddIOMusicIdentifier, DummyMusicIdentifier } from "./impl/index.js";
 import { BaseMusicIdentifier } from "./model/index.js";
 
+export * from "./impl/index.js";
 export * from "./model/index.js";
 
 export function createMusicIdentifier(): BaseMusicIdentifier {
