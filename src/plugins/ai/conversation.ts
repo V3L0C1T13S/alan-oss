@@ -9,7 +9,7 @@ export default class Conversation extends BaseCommand {
   static description = "Manage your conversations with the AI.";
   static parameters: CommandParameter[] = [{
     name: "op",
-    description: `The management OP to carry out. Must be one of ${ops.join(", ")}`,
+    description: "The management OP to carry out.",
     type: CommandParameterTypes.String,
     optional: false,
     choices: ops.map((op) => ({
