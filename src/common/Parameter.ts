@@ -8,6 +8,11 @@ export enum CommandParameterTypes {
   Subcommand = 6,
 }
 
+export interface ParameterChoice {
+  name: string,
+  value: string,
+}
+
 export interface BaseCommandParameter {
   /**
    * @maxlength 32
@@ -16,6 +21,7 @@ export interface BaseCommandParameter {
   type: CommandParameterTypes;
   description: string;
   optional?: boolean;
+  choices?: ParameterChoice[],
 }
 
 export interface SubCommandParameter extends Omit<BaseCommandParameter, "optional"> {

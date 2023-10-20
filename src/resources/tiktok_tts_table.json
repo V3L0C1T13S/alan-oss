@@ -1,0 +1,29 @@
+{
+    "speakers": [
+        {
+            "name": "Game On",
+            "code": "en_male_jomboy",
+            "lang": "en"
+        },
+        {
+            "name": "Jessie",
+            "code": "en_us_002",
+            "lang": "en"
+        },
+        {
+            "name": "Warm",
+            "code": "es_mx_002",
+            "lang": "en"
+        },
+        {
+            "name": "Wacky",
+            "code": "en_male_funny",
+            "lang": "en"
+        },
+        {
+            "name": "Japanese - Female 1",
+            "code": "jp_001",
+            "lang": "jp"
+        }
+    ]
+}

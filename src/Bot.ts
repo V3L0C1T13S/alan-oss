@@ -135,6 +135,8 @@ export class Bot {
                     .setName(param.name)
                     .setDescription(param.description)
                     .setRequired(!param.optional ?? true);
+                  if (param.choices) option.addChoices(...param.choices);
+
                   slashCmd.addStringOption(option);
 
                   break;

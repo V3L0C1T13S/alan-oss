@@ -9,6 +9,7 @@ import {
 import {
   ErrorMessages, alanTmpDir, tikTokAPIURL, tiktokSessionId,
 } from "../../constants/index.js";
+import tiktokVoices from "../../resources/tiktok_tts_table.json";
 
 const tiktokTempDir = path.join(alanTmpDir, "tiktok-audio");
 
@@ -66,5 +67,9 @@ export default class TiktokTTS extends BaseCommand {
     description: "The voice to use for TTS.",
     type: CommandParameterTypes.String,
     optional: true,
+    choices: tiktokVoices.speakers.map((x) => ({
+      name: x.name,
+      value: x.code,
+    })),
   }];
 }
