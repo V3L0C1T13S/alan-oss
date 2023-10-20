@@ -12,6 +12,10 @@ export default class Conversation extends BaseCommand {
     description: `The management OP to carry out. Must be one of ${ops.join(", ")}`,
     type: CommandParameterTypes.String,
     optional: false,
+    choices: ops.map((op) => ({
+      name: op,
+      value: op,
+    })),
   }, {
     name: "conversation",
     description: "The conversation ID to perform the OP on.",
