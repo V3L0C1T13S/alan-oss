@@ -11,11 +11,11 @@ export default class Play extends BaseCommand {
   }];
 
   async run() {
-    const soundURL = this.args?.subcommands?.url?.toString() ?? this.joinArgsToString();
+    const soundURL = (await this.getFirstAttachment())?.url ?? this.joinArgsToString();
     if (!soundURL) return ErrorMessages.NotEnoughArgs;
 
     const player = this.bot.soundPlayerManager.getPlayer(this.clientType);
-    if (!player) return "No player?";
+    if (!player) return "No player.";
     if (!this.guild) return "No guild.";
 
     const member = await this.guild.members.fetch(this.author);
