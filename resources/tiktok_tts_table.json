@@ -1,0 +1,94 @@
+{
+    "speakers": [
+        {
+            "name": "Game On",
+            "code": "en_male_jomboy",
+            "lang": "en"
+        },
+        {
+            "name": "Jessie",
+            "code": "en_us_002",
+            "lang": "en"
+        },
+        {
+            "name": "Warm",
+            "code": "es_mx_002",
+            "lang": "en"
+        },
+        {
+            "name": "Wacky",
+            "code": "en_male_funny",
+            "lang": "en"
+        },
+        {
+            "name": "Scream",
+            "code": "en_us_ghostface",
+            "lang": "en"
+        },
+        {
+            "name": "Empathetic",
+            "code": "en_female_samc",
+            "lang": "en"
+        },
+        {
+            "name": "Serious",
+            "code": "en_male_cody",
+            "lang": "en"
+        },
+        {
+            "name": "Beauty Guru",
+            "code": "en_female_makeup",
+            "lang": "en"
+        },
+        {
+            "name": "Bestie",
+            "code": "en_female_richgirl",
+            "lang": "en"
+        },
+        {
+            "name": "Trickster",
+            "code": "en_male_grinch",
+            "lang": "en"
+        },
+        {
+            "name": "Joey",
+            "code": "en_us_006",
+            "lang": "en"
+        },
+        {
+            "name": "Story Teller",
+            "code": "en_male_narration",
+            "lang": "en"
+        },
+        {
+            "name": "Mr. GoodGuy ",
+            "code": "en_male_deadpool",
+            "lang": "en"
+        },
+        {
+            "name": "Narrator",
+            "code": "en_uk_001",
+            "lang": "en"
+        },
+        {
+            "name": "Metro",
+            "code": "en_au_001",
+            "lang": "en"
+        },
+        {
+            "name": "Alfred",
+            "code": "en_male_jarvis",
+            "lang": "en"
+        },
+        {
+            "name": "ashmagic",
+            "code": "en_male_ashmagic",
+            "lang": "en"
+        },
+        {
+            "name": "Japanese - Female 1",
+            "code": "jp_001",
+            "lang": "jp"
+        }
+    ]
+}

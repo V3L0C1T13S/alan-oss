@@ -4,13 +4,13 @@ import { mkdir, readFile } from "node:fs/promises";
 import { ulid } from "ulid";
 import { AttachmentBuilder } from "discord.js";
 import {
-  CommandParameter, CommandParameterTypes, BaseCommand, initParameters, Logger,
+  CommandParameter, CommandParameterTypes, BaseCommand, initParameters, Logger, TiktokVoiceTable,
 } from "../../common/index.js";
 import {
   ErrorMessages, alanTmpDir, tikTokAPIURL, tiktokSessionId,
 } from "../../constants/index.js";
-import tiktokVoices from "../../resources/tiktok_tts_table.json";
 
+const tiktokVoices: TiktokVoiceTable = JSON.parse((await readFile(path.join(process.cwd(), "resources/tiktok_tts_table.json"))).toString("utf-8"));
 const tiktokTempDir = path.join(alanTmpDir, "tiktok-audio");
 
 export default class TiktokTTS extends BaseCommand {
