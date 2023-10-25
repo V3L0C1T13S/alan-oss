@@ -36,7 +36,8 @@ export type UserCommandParameter = BaseCommandParameter<CommandParameterTypes.Us
 export type ChannelCommandParameter = BaseCommandParameter<CommandParameterTypes.Channel>;
 export type AttachmentCommandParameter = BaseCommandParameter<CommandParameterTypes.Attachment>;
 export interface SubCommandParameter extends Omit<BaseCommandParameter<CommandParameterTypes.Subcommand>, "optional"> {
-  subcommands: BaseCommandParameter<CommandParameterTypes>[]
+  // eslint-disable-next-line no-use-before-define
+  subcommands: CommandParameter[]
 }
 
 export type CommandParameter = StringCommandParameter

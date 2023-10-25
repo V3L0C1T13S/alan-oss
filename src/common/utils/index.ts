@@ -8,3 +8,4 @@ export * from "./pagination/index.js";
 export * from "./icons.js";
 export * from "./sound/index.js";
 export * from "./cdn/index.js";
+export * from "./interactions/index.js";

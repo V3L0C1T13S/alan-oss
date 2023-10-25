@@ -40,7 +40,13 @@ import {
   BaseDatabaseModel, CommandArguments, CommandParameterTypes,
 } from "./common/index.js";
 import {
-  Logger, BaseAIManager, canExecuteCommand, createDatabase, createAIManager, SoundPlayerManager,
+  Logger,
+  BaseAIManager,
+  canExecuteCommand,
+  createDatabase,
+  createAIManager,
+  SoundPlayerManager,
+  createParameter,
 } from "./common/utils/index.js";
 
 export class Bot {
@@ -129,72 +135,9 @@ export class Bot {
           slashCmd.setDescription(command.description);
           command.parameters.forEach((param) => {
             try {
-              switch (param.type) {
-                case CommandParameterTypes.String: {
-                  const option = new SlashCommandStringOption()
-                    .setName(param.name)
-                    .setDescription(param.description)
-                    .setRequired(!param.optional ?? true);
-                  if (param.choices) option.addChoices(...param.choices);
+              const newOption = createParameter(param);
 
-                  slashCmd.addStringOption(option);
-
-                  break;
-                }
-                case CommandParameterTypes.Bool: {
-                  const option = new SlashCommandBooleanOption()
-                    .setName(param.name)
-                    .setDescription(param.description)
-                    .setRequired(!param.optional ?? true);
-                  slashCmd.addBooleanOption(option);
-
-                  break;
-                }
-                case CommandParameterTypes.Number: {
-                  const option = new SlashCommandNumberOption()
-                    .setName(param.name)
-                    .setDescription(param.description)
-                    .setRequired(!param.optional ?? true);
-                  slashCmd.addNumberOption(option);
-
-                  break;
-                }
-                case CommandParameterTypes.Channel: {
-                  const option = new SlashCommandChannelOption()
-                    .setName(param.name)
-                    .setDescription(param.description)
-                    .setRequired(!param.optional ?? true);
-                  slashCmd.addChannelOption(option);
-
-                  break;
-                }
-                case CommandParameterTypes.User: {
-                  const option = new SlashCommandUserOption()
-                    .setName(param.name)
-                    .setDescription(param.description)
-                    .setRequired(!param.optional ?? true);
-                  slashCmd.addUserOption(option);
-
-                  break;
-                }
-                case CommandParameterTypes.Attachment: {
-                  const option = new SlashCommandAttachmentOption()
-                    .setName(param.name)
-                    .setDescription(param.description)
-                    .setRequired(!param.optional ?? true);
-                  slashCmd.addAttachmentOption(option);
-
-                  break;
-                }
-                case CommandParameterTypes.Subcommand: {
-                  const option = new SlashCommandSubcommandBuilder()
-                    .setName(param.name)
-                    .setDescription(param.description);
-
-                  break;
-                }
-                default: Logger.error("Unhandled param:", param);
-              }
+              slashCmd.options.push(newOption);
             } catch (e) {
               Logger.error(`Incorrectly formatted param ${param.name} in ${command.name}`, e);
             }
@@ -316,7 +259,13 @@ export class Bot {
           }
           case ApplicationCommandOptionType.Attachment: break;
           case ApplicationCommandOptionType.User: break;
-          case ApplicationCommandOptionType.Subcommand: break;
+          case ApplicationCommandOptionType.Subcommand: {
+            subcommands[option.name] = true;
+            option.options?.forEach((subOption) => {
+              if (subOption.value !== undefined) subcommands[subOption.name] = subOption.value;
+            });
+            break;
+          }
           default: Logger.error(`Unhandled option type ${option.type}`);
         }
       });
