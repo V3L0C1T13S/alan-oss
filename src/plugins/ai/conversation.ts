@@ -50,8 +50,9 @@ export default class Conversation extends BaseCommand {
   async run() {
     if (!this.args?.subcommands) return ErrorMessages.NotEnoughArgs;
     const conversationId = this.args.subcommands.conversation?.toString();
-
     const { list, create, close } = this.args.subcommands;
+
+    await this.ack();
     if (list) {
       return (await this.bot.aiManager.getConversationsByOwner(this.author.id))
         .map((x) => `${x.name}: ${x.id}`)
