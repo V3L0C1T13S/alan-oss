@@ -1,5 +1,8 @@
 import sqlite from "better-sqlite3";
-import { BaseDatabaseModel, CommandCounts } from "../../model/index.js";
+import {
+  BaseDatabaseModel, CommandCounts, EditTagData, FindTagData, TagData,
+} from "../../model/index.js";
+import { Logger } from "../../../logger.js";
 
 const schema = `
 CREATE TABLE guilds (
@@ -13,11 +16,10 @@ CREATE TABLE counts (
   count integer NOT NULL
 );
 CREATE TABLE tags (
-  guild_id VARCHAR(30) NOT NULL,
   name text NOT NULL,
   content text NOT NULL,
   author VARCHAR(30) NOT NULL,
-  UNIQUE(guild_id, name)
+  UNIQUE(name)
 );
 CREATE TABLE settings (
   id smallint PRIMARY KEY,
@@ -65,14 +67,14 @@ export class SqlDatabaseManager extends BaseDatabaseModel {
     const latestVersion = updates.length - 1;
 
     if (version === 0) {
-      console.log("initializing sql");
+      Logger.log("initializing sql");
       this.connection.exec(schema);
     } else if (version < latestVersion) {
-      console.info(`Migrating SQLite database at ${process.env.DB}, which is currently at version ${version}...`);
+      Logger.info(`Migrating SQLite database at ${process.env.DB}, which is currently at version ${version}...`);
       while (version < latestVersion) {
         // eslint-disable-next-line no-plusplus
         version++;
-        console.info(`Running version ${version} update script...`);
+        Logger.info(`Running version ${version} update script...`);
         this.connection.exec(updates[version]!);
       }
     } else if (version > latestVersion) {
@@ -100,6 +102,22 @@ export class SqlDatabaseManager extends BaseDatabaseModel {
     }
 
     return countObject;
+  }
+
+  async addTag(data: TagData): Promise<TagData> {
+    throw new Error("Unimplemented");
+  }
+
+  async editTag(find: FindTagData, data: EditTagData): Promise<TagData> {
+    throw new Error("Unimplemented");
+  }
+
+  async getTag(data: FindTagData): Promise<TagData | null> {
+    throw new Error("Unimplemented");
+  }
+
+  async deleteTag(data: FindTagData) {
+    throw new Error("Unimplemented");
   }
 
   async stop() {

@@ -1,9 +1,12 @@
 import mongoose from "mongoose";
-import { BaseDatabaseModel, CommandCounts } from "../../model/index.js";
+import {
+  BaseDatabaseModel, CommandCounts, EditTagData, FindTagData, TagData,
+} from "../../model/index.js";
 import { Bot } from "../../../../../Bot.js";
 import { CommandCount } from "./counts.js";
 import { Logger } from "../../../logger.js";
 import { mongoURL } from "../../../../../constants/index.js";
+import { Tag } from "./tag.js";
 
 export class MongoDbManager extends BaseDatabaseModel {
   connection: mongoose.Mongoose;
@@ -44,6 +47,29 @@ export class MongoDbManager extends BaseDatabaseModel {
     }, {
       upsert: true,
     });
+  }
+
+  async addTag(data: TagData) {
+    const tag = await Tag.create(data);
+
+    return tag.toObject();
+  }
+
+  async editTag(find: FindTagData, data: EditTagData) {
+    const tag = await Tag.findOneAndUpdate(find, data);
+    if (!tag) throw new Error("Tag not found.");
+
+    return tag.toObject();
+  }
+
+  async getTag(data: FindTagData) {
+    const tag = await Tag.findOne(data);
+
+    return tag?.toObject() ?? null;
+  }
+
+  async deleteTag(data: FindTagData) {
+    await Tag.deleteOne(data);
   }
 
   async stop() {
