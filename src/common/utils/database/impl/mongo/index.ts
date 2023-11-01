@@ -7,6 +7,8 @@ import { CommandCount } from "./counts.js";
 import { Logger } from "../../../logger.js";
 import { mongoURL } from "../../../../../constants/index.js";
 import { Tag } from "./tag.js";
+import { ConversationData, EditConversationData, FindConversationData } from "../../model/conversation.js";
+import { Conversation } from "./conversation.js";
 
 export class MongoDbManager extends BaseDatabaseModel {
   connection: mongoose.Mongoose;
@@ -70,6 +72,29 @@ export class MongoDbManager extends BaseDatabaseModel {
 
   async deleteTag(data: FindTagData) {
     await Tag.deleteOne(data);
+  }
+
+  async addConversation(data: ConversationData): Promise<ConversationData> {
+    const conversation = await Conversation.create(data);
+
+    return conversation.toObject();
+  }
+
+  async getConversation(find: FindConversationData) {
+    const conversation = await Conversation.findOne(find);
+
+    return conversation?.toObject() ?? null;
+  }
+
+  async editConversation(find: FindConversationData, data: EditConversationData) {
+    const updated = await Conversation.findOneAndUpdate(find, data);
+    if (!updated) throw new Error(`Could not find conversation ${find.id} by ${find.owner}.`);
+
+    return updated.toObject();
+  }
+
+  async deleteConversation(find: FindConversationData) {
+    await Conversation.deleteOne(find);
   }
 
   async stop() {

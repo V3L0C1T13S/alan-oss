@@ -1,6 +1,13 @@
 import sqlite from "better-sqlite3";
 import {
-  BaseDatabaseModel, CommandCounts, EditTagData, FindTagData, TagData,
+  BaseDatabaseModel,
+  CommandCounts,
+  ConversationData,
+  EditConversationData,
+  EditTagData,
+  FindConversationData,
+  FindTagData,
+  TagData,
 } from "../../model/index.js";
 import { Logger } from "../../../logger.js";
 
@@ -42,6 +49,23 @@ const updates = [
 ];
 
 export class SqlDatabaseManager extends BaseDatabaseModel {
+  addConversation(data: ConversationData): Promise<ConversationData> {
+    throw new Error("Method not implemented.");
+  }
+
+  // eslint-disable-next-line max-len
+  editConversation(find: FindConversationData, data: EditConversationData): Promise<ConversationData> {
+    throw new Error("Method not implemented.");
+  }
+
+  getConversation(find: FindConversationData): Promise<ConversationData | null> {
+    throw new Error("Method not implemented.");
+  }
+
+  deleteConversation(find: FindConversationData): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
   connection: sqlite.Database = sqlite("db.sql");
 
   async setupSql() {

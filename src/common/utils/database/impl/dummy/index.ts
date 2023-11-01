@@ -1,9 +1,32 @@
 import { Logger } from "../../../logger.js";
 import {
-  BaseDatabaseModel, CommandCounts, FindTagData, TagData,
+  BaseDatabaseModel,
+  CommandCounts,
+  ConversationData,
+  EditConversationData,
+  FindConversationData,
+  FindTagData,
+  TagData,
 } from "../../model/index.js";
 
 export class DummyDatabaseManager extends BaseDatabaseModel {
+  addConversation(data: ConversationData): Promise<ConversationData> {
+    throw new Error("Method not implemented.");
+  }
+
+  // eslint-disable-next-line max-len
+  editConversation(find: FindConversationData, data: EditConversationData): Promise<ConversationData> {
+    throw new Error("Method not implemented.");
+  }
+
+  getConversation(find: FindConversationData): Promise<ConversationData | null> {
+    throw new Error("Method not implemented.");
+  }
+
+  deleteConversation(find: FindConversationData): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
   protected commandCounts: CommandCounts = {};
   protected tags: TagData[] = [];
 
