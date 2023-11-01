@@ -1,8 +1,15 @@
+import { BaseDatabaseModel } from "../../database/index.js";
 import { Conversation } from "./conversation.js";
 
 export * from "./conversation.js";
 
 export abstract class BaseAIManager<initParams = any, promptReturn = string, promptArgs = string> {
+  db: BaseDatabaseModel;
+
+  constructor(db: BaseDatabaseModel) {
+    this.db = db;
+  }
+
   abstract init(initParams: initParams): Promise<void>
 
   abstract ask(prompt: promptArgs): Promise<promptReturn>

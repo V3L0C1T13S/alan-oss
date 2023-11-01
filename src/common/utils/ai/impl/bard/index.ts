@@ -6,14 +6,15 @@ import { Logger } from "../../../logger.js";
 import { BardConversation } from "./conversation.js";
 import { BardPrompt, BardResponse } from "./types.js";
 import { GenericAIConversationManager } from "../../generic/conversationManager.js";
+import { BaseDatabaseModel } from "../../../database/index.js";
 
 export class BardAIManager extends BaseAIManager<any, BardResponse, BardPrompt> {
   private bard: Bard;
 
   private conversationManager = new GenericAIConversationManager();
 
-  constructor() {
-    super();
+  constructor(db: BaseDatabaseModel) {
+    super(db);
 
     if (!bardCookie || !bardPSIDTS) throw new Error("Bard token not specified.");
 

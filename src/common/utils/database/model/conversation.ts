@@ -6,6 +6,7 @@ export interface ConversationUser {
 export interface ConversationMessage {
     content: string,
     author: ConversationUser,
+    conversation: string,
 }
 
 export interface ConversationData {

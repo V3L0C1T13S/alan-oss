@@ -7,6 +7,7 @@ import { BaseAIManager } from "../../model/index.js";
 import { Llama } from "./llama_wrapper.js";
 import { LlamaConversation } from "./conversation.js";
 import { GenericAIConversationManager } from "../../generic/index.js";
+import { BaseDatabaseModel } from "../../../database/index.js";
 
 export const assistantName = "Ailsa";
 
@@ -23,8 +24,8 @@ export class LlamaAIManager extends BaseAIManager<any, string, string> {
 
   llama: Llama;
 
-  constructor() {
-    super();
+  constructor(db: BaseDatabaseModel) {
+    super(db);
 
     if (!llamaBin || !llamaModel) throw new Error("Your llama ENV variables are set incorrectly.");
 

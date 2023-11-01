@@ -5,6 +5,7 @@ import { VercelConversation } from "./conversation.js";
 import { VercelAPI } from "./vercel_api.js";
 import { Logger } from "../../../logger.js";
 import { VercelPrompt, VercelResponse, VercelUser } from "./types.js";
+import { BaseDatabaseModel } from "../../../database/index.js";
 
 export class VercelAIManager extends BaseAIManager<any, VercelPrompt, VercelResponse> {
   private api: VercelAPI;
@@ -13,8 +14,8 @@ export class VercelAIManager extends BaseAIManager<any, VercelPrompt, VercelResp
 
   private users: Map<string, VercelUser> = new Map();
 
-  constructor() {
-    super();
+  constructor(db: BaseDatabaseModel) {
+    super(db);
 
     if (!vercelSession || !vercelPlaygroundId) throw new Error("Vercel hasn't been configured.");
 

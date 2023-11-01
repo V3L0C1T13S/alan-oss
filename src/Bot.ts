@@ -77,7 +77,7 @@ export class Bot {
   pluginManager = new PluginManager(this);
 
   database: BaseDatabaseModel;
-  aiManager: BaseAIManager = createAIManager();
+  aiManager: BaseAIManager;
   soundPlayerManager = new SoundPlayerManager();
 
   constructor() {
@@ -94,6 +94,8 @@ export class Bot {
 
     // DB may expect a fully constructed bot. Create it last.
     this.database = createDatabase(this);
+    // AI manager expects db
+    this.aiManager = createAIManager(this.database);
   }
 
   async init() {
