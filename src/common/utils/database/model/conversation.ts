@@ -17,5 +17,5 @@ export interface ConversationData {
     name: string,
 }
 
-export type FindConversationData = Pick<ConversationData, "id" | "owner">
+export type FindConversationData = Pick<ConversationData, "id">
 export type EditConversationData = Pick<ConversationData, "messages" | "users">;
