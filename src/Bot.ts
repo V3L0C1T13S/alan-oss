@@ -12,14 +12,7 @@ import {
   PresenceStatusData,
   REST,
   Routes,
-  SlashCommandAttachmentOption,
-  SlashCommandBooleanOption,
   SlashCommandBuilder,
-  SlashCommandChannelOption,
-  SlashCommandNumberOption,
-  SlashCommandStringOption,
-  SlashCommandSubcommandBuilder,
-  SlashCommandUserOption,
   User,
 } from "discord.js";
 import { Client as RevoltClient } from "revolt.js/lib/Client.js";
