@@ -41,7 +41,7 @@
     "erlpack": "^0.1.4",
     "file-type": "^18.6.0",
     "mongodb": "^6.2.0",
-    "mongoose": "^7.6.4",
+    "mongoose": "^8.0.0",
     "nodejs-whisper": "https://github.com/V3L0C1T13S/nodejs-whisper/releases/download/0.1.3-patch-2/nodejs-whisper-0.1.3.tgz",
     "revoice.js": "^0.1.7537",
     "revolt.js": "7.0.0-beta.9",
