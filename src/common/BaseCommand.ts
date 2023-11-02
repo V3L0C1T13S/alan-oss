@@ -224,6 +224,10 @@ export class BaseCommand {
     return;
   }
 
+  async getDbUser() {
+    return this.bot.database.getOrCreateUserByPlatform(this.clientType, this.author.id);
+  }
+
   static async init(params: initParameters) {
     return this;
   }

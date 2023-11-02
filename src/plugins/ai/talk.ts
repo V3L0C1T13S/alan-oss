@@ -26,7 +26,8 @@ export default class Talk extends BaseCommand {
     try {
       await this.ack();
 
-      const conversation = await this.bot.aiManager.getOrCreateCurrentConversation(this.author.id);
+      const user = await this.getDbUser();
+      const conversation = await this.bot.aiManager.getOrCreateCurrentConversation(user.id);
       const response = await conversation.ask(prompt.toString());
 
       if (response.length > maxMessageLength) {

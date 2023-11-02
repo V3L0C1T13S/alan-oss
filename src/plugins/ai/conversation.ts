@@ -53,13 +53,16 @@ export default class Conversation extends BaseCommand {
     const { list, create, close } = this.args.subcommands;
 
     await this.ack();
+
+    const user = await this.getDbUser();
+
     if (list) {
-      return (await this.bot.aiManager.getConversationsByOwner(this.author.id))
+      return (await this.bot.aiManager.getConversationsByOwner(user.id))
         .map((x) => `${x.name}: ${x.id}`)
         .join("\n") || "No conversations.";
     }
     if (create) {
-      const conversation = await this.bot.aiManager.createConversation(this.author.id);
+      const conversation = await this.bot.aiManager.createConversation(user.id);
 
       return `Created conversation \`${conversation.id}\``;
     }
@@ -67,7 +70,7 @@ export default class Conversation extends BaseCommand {
       if (!conversationId) return ErrorMessages.NotEnoughArgs;
 
       const conversation = await this.bot.aiManager.getConversationByOwner(
-        this.author.id,
+        user.id,
         conversationId,
       );
       if (!conversation) return ErrorMessages.AIConversationNotFound;
@@ -79,7 +82,7 @@ export default class Conversation extends BaseCommand {
     if (this.args.subcommands.switch) {
       if (!conversationId) return ErrorMessages.NotEnoughArgs;
 
-      await this.bot.aiManager.setCurrentConversation(this.author.id, conversationId);
+      await this.bot.aiManager.setCurrentConversation(user.id, conversationId);
 
       return "Conversation switched.";
     }
@@ -88,7 +91,7 @@ export default class Conversation extends BaseCommand {
       if (!conversationId || !template) return ErrorMessages.NotEnoughArgs;
 
       const conversation = await this.bot.aiManager
-        .getConversationByOwner(this.author.id, conversationId);
+        .getConversationByOwner(user.id, conversationId);
       if (!conversation) return ErrorMessages.AIConversationNotFound;
 
       try {

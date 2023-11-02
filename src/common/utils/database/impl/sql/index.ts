@@ -3,9 +3,12 @@ import {
   BaseDatabaseModel,
   CommandCounts,
   ConversationData,
+  DbUser,
   EditConversationData,
   EditTagData,
+  FindConversationByOwnerData,
   FindConversationData,
+  FindDbUser,
   FindTagData,
   TagData,
 } from "../../model/index.js";
@@ -49,6 +52,27 @@ const updates = [
 ];
 
 export class SqlDatabaseManager extends BaseDatabaseModel {
+  getAllConversationsByOwner(owner: string): Promise<ConversationData[]> {
+    throw new Error("Method not implemented.");
+  }
+  saveConversation(find: FindConversationData, data: Partial<ConversationData>): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  getConversationByOwner(find: FindConversationByOwnerData): Promise<ConversationData | null> {
+    throw new Error("Method not implemented.");
+  }
+  createUser(data: DbUser): Promise<DbUser> {
+    throw new Error("Method not implemented.");
+  }
+  getUser(data: FindDbUser): Promise<DbUser | null> {
+    throw new Error("Method not implemented.");
+  }
+  findUserByDiscord(discord: string): Promise<DbUser | null> {
+    throw new Error("Method not implemented.");
+  }
+  findUserByRevolt(revolt: string): Promise<DbUser | null> {
+    throw new Error("Method not implemented.");
+  }
   addConversation(data: ConversationData): Promise<ConversationData> {
     throw new Error("Method not implemented.");
   }

@@ -1,14 +1,17 @@
 import mongoose from "mongoose";
 import {
-  BaseDatabaseModel, CommandCounts, EditTagData, FindTagData, TagData,
+  BaseDatabaseModel, CommandCounts, DbUser, EditTagData, FindDbUser, FindTagData, TagData,
 } from "../../model/index.js";
 import { Bot } from "../../../../../Bot.js";
 import { CommandCount } from "./counts.js";
 import { Logger } from "../../../logger.js";
 import { mongoURL } from "../../../../../constants/index.js";
 import { Tag } from "./tag.js";
-import { ConversationData, EditConversationData, FindConversationData } from "../../model/conversation.js";
+import {
+  ConversationData, EditConversationData, FindConversationByOwnerData, FindConversationData,
+} from "../../model/conversation.js";
 import { Conversation } from "./conversation.js";
+import { User } from "./user.js";
 
 export class MongoDbManager extends BaseDatabaseModel {
   connection: mongoose.Mongoose;
@@ -86,15 +89,57 @@ export class MongoDbManager extends BaseDatabaseModel {
     return conversation?.toObject() ?? null;
   }
 
+  async getConversationByOwner(find: FindConversationByOwnerData) {
+    const conversation = await Conversation.findOne(find);
+
+    return conversation?.toObject() ?? null;
+  }
+
+  async getAllConversationsByOwner(owner: string) {
+    const conversations = await Conversation.find({ owner });
+
+    return conversations.map((convo) => convo.toObject());
+  }
+
+  async saveConversation(find: FindConversationData, data: Partial<ConversationData>) {
+    await Conversation.updateOne(find, data, {
+      upsert: true,
+    });
+  }
+
   async editConversation(find: FindConversationData, data: EditConversationData) {
     const updated = await Conversation.findOneAndUpdate(find, data);
-    if (!updated) throw new Error(`Could not find conversation ${find.id} by ${find.owner}.`);
+    if (!updated) throw new Error(`Could not find conversation ${find.id}.`);
 
     return updated.toObject();
   }
 
   async deleteConversation(find: FindConversationData) {
     await Conversation.deleteOne(find);
+  }
+
+  async createUser(data: DbUser) {
+    const user = await User.create(data);
+
+    return user.toObject();
+  }
+
+  async getUser(data: FindDbUser): Promise<DbUser | null> {
+    const user = await User.findOne(data);
+
+    return user?.toObject() ?? null;
+  }
+
+  async findUserByDiscord(discord: string): Promise<DbUser | null> {
+    const user = await User.findOne({ "accounts.discord": discord });
+
+    return user?.toObject() ?? null;
+  }
+
+  async findUserByRevolt(revolt: string) {
+    const user = await User.findOne({ accounts: { revolt } });
+
+    return user?.toObject() ?? null;
   }
 
   async stop() {

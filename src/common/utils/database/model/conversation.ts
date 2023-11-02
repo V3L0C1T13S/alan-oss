@@ -5,7 +5,7 @@ export interface ConversationUser {
 
 export interface ConversationMessage {
     content: string,
-    author: ConversationUser,
+    author: string,
     conversation: string,
 }
 
@@ -18,4 +18,5 @@ export interface ConversationData {
 }
 
 export type FindConversationData = Pick<ConversationData, "id">
+export type FindConversationByOwnerData = FindConversationData & { owner: string };
 export type EditConversationData = Pick<ConversationData, "messages" | "users">;

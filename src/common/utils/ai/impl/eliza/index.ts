@@ -18,10 +18,11 @@ export class ElizaAIManager extends BaseAIManager {
   }
 
   async createConversation(owner?: string | undefined) {
-    const conversaton = new ElizaConversation(ulid(), owner);
-    this.conversationManager.insertConversation(conversaton);
+    // FIXME: wut is typescript smoking??? we have to manually define types here
+    const conversation: ElizaConversation = new ElizaConversation(ulid(), this, owner);
+    this.conversationManager.insertConversation(conversation);
 
-    return conversaton;
+    return conversation;
   }
 
   async getConversation(id: string) {

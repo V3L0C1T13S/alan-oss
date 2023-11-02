@@ -1,5 +1,9 @@
 export interface DbUser {
     id: string,
-    discord_id?: string,
-    revolt_id?: string,
+    accounts?: {
+        discord?: string,
+        revolt?: string,
+    }
 }
+
+export type FindDbUser = Pick<DbUser, "id">;

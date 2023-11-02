@@ -1,20 +1,24 @@
+import { ulid } from "ulid";
 import { Logger } from "../../../logger.js";
-import { Conversation } from "../../model/index.js";
+import { StorableConversation } from "../../generic/index.js";
 import { LlamaAIManager, assistantName } from "./index.js";
-import { ConversationMessage, ConversationUser } from "./types.js";
+import { ConversationData, ConversationMessage, ConversationUser } from "../../../database/index.js";
 
-export class LlamaConversation extends Conversation {
-  private ai: LlamaAIManager;
-  private messages: ConversationMessage[] = [];
-  private users: ConversationUser[] = [];
-
+export class LlamaConversation extends StorableConversation {
+  protected ai: LlamaAIManager;
   private personality = `You are an AI assistant named ${assistantName}, with the goal of answering the User's prompts, and assisting them in any way you can. You are helpful, kind, honest, and never fail to answer the User's requests immediately and with precision.`;
 
   private generating = false;
   private locked = false;
 
-  constructor(id: string, manager: LlamaAIManager, owner?: string, name?: string) {
-    super(id, owner, name);
+  constructor(
+    id: string,
+    manager: LlamaAIManager,
+    owner?: string,
+    name?: string,
+    dbConvo?: ConversationData,
+  ) {
+    super(id, manager, owner, name, dbConvo);
 
     this.ai = manager;
 
@@ -28,33 +32,13 @@ export class LlamaConversation extends Conversation {
     this.createMessage("It is currently sunny out, the temperature is 97 degrees with a wind speed of 20 MPH. It is expected to rain later today.", assistantName);
   }
 
-  private createUser(name: string) {
-    const user: ConversationUser = {
-      name,
-    };
-    this.users.push(user);
-
-    return user;
-  }
-
-  private getUser(name: string) {
-    return this.users.find((user) => user.name === name);
-  }
-
-  private createMessage(content: string, author: string) {
-    const user = this.getUser(author) ?? this.createUser(author);
-    const message: ConversationMessage = {
-      content,
-      author: user,
-    };
-
-    this.messages.push(message);
-
-    return message;
-  }
-
   private getConversationText() {
-    return this.messages.map((message) => `${message.author.name}: ${message.content}`).join("\n");
+    return this.messages.map((message) => {
+      const author = this.getUserById(message.author);
+      if (!author) throw new Error(`Author ${message.author} not found.`);
+
+      return `${author.name}: ${message.content}`;
+    }).join("\n");
   }
 
   private generatePrompt(prompt: string) {
@@ -117,9 +101,10 @@ export class LlamaConversation extends Conversation {
     if (!this.name) {
       this.name = "Creating name...";
       this.generateName(extracted)
-        .then((name) => {
+        .then(async (name) => {
           this.unlock();
           this.name = name;
+          // await this.save().catch((e) => Logger.error("Failed to save conversation:", e));
           Logger.debug("Name:", this.name);
         })
         .catch((e) => {
@@ -130,6 +115,8 @@ export class LlamaConversation extends Conversation {
     } else {
       this.unlock();
     }
+
+    // await this.save();
 
     return extracted;
   }
