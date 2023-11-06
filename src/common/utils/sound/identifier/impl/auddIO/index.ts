@@ -1,7 +1,7 @@
 import path from "node:path";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { BaseMusicIdentifier } from "../../model/index.js";
+import { BaseMusicIdentifier, NotFoundError } from "../../model/index.js";
 import { MusicIdentifierResponse } from "../../model/types.js";
 import { auddIOToken } from "../../../../../../constants/index.js";
 import { AuddIOResponse } from "./types.js";
@@ -38,7 +38,7 @@ export class AuddIOMusicIdentifier extends BaseMusicIdentifier {
   async find(url: string) {
     const body = await this.fetchAudioInfo(url);
     const { result } = body;
-    if (!result || body.status !== "success") throw new Error("Song not found.");
+    if (!result || body.status !== "success") throw new NotFoundError();
 
     const artworkURL = result.apple_music?.artwork.url
       .replaceAll("{w}", "256")

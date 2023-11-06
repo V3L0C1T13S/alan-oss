@@ -25,6 +25,11 @@ export const tiktokSessionId = process.env.TIKTOK_SESSION;
 export const musicIdentifierBackend = process.env.MUSIC_IDENTIFIER_BACKEND ?? "dummy";
 export const auddIOToken = process.env.AUDDIO_TOKEN;
 
+export const acrCloudKey = process.env.ACRCLOUD_KEY;
+export const acrCloudSecret = process.env.ACRCLOUD_SECRET;
+export const acrCloudHost = process.env.ACRCLOUD_HOST;
+export const acrCloudBearer = process.env.ACRCLOUD_BEARER;
+
 export const alanTmpDir = path.join(os.tmpdir(), "alan-tmp");
 
 export const reflectcordAPIURL = process.env.REFLECTCORD_API_URL ?? "http://localhost:3000/api";

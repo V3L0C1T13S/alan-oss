@@ -9,7 +9,12 @@ import {
 import { fileTypeFromBuffer } from "file-type";
 import { ErrorMessages, useVoiceMessageAudio } from "../../constants/index.js";
 import {
-  BaseCommand, CommandParameter, CommandParameterTypes, Logger, createMusicIdentifier,
+  BaseCommand,
+  CommandParameter,
+  CommandParameterTypes,
+  Logger,
+  createMusicIdentifier,
+  NotFoundError,
 } from "../../common/index.js";
 
 const musicIdentifier = createMusicIdentifier();
@@ -128,7 +133,10 @@ export default class Identify extends BaseCommand {
         files,
       };
     } catch (e) {
-      return "Song could not be identified.";
+      if (e instanceof NotFoundError) return "Song could not be identified.";
+
+      Logger.error(e);
+      return "An error occurred during song identification.";
     }
   }
 }
