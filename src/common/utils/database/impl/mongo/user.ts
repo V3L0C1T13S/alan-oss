@@ -15,6 +15,10 @@ const AccountSchema = new Schema({
 export const UserSchema = new Schema<DbUser>({
   id: String,
   accounts: AccountSchema,
+  accepted_ai_tos: {
+    type: Boolean,
+    required: false,
+  },
 });
 
 export const User = model("User", UserSchema);

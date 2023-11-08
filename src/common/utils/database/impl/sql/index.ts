@@ -52,6 +52,9 @@ const updates = [
 ];
 
 export class SqlDatabaseManager extends BaseDatabaseModel {
+  updateUser(find: FindDbUser, update: Partial<DbUser>): Promise<DbUser> {
+    throw new Error("Method not implemented.");
+  }
   getAllConversationsByOwner(owner: string): Promise<ConversationData[]> {
     throw new Error("Method not implemented.");
   }

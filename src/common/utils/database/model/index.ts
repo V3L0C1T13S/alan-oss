@@ -5,7 +5,7 @@ import { TagData, EditTagData, FindTagData } from "./tag.js";
 import {
   ConversationData, EditConversationData, FindConversationByOwnerData, FindConversationData,
 } from "./conversation.js";
-import { DbUser, FindDbUser } from "./user.js";
+import { DbUser, FindDbUser, UpdateDbUser } from "./user.js";
 
 export * from "./types.js";
 export * from "./tag.js";
@@ -46,6 +46,7 @@ export abstract class BaseDatabaseModel {
 
   abstract createUser(data: DbUser): Promise<DbUser>;
   abstract getUser(data: FindDbUser): Promise<DbUser | null>;
+  abstract updateUser(find: FindDbUser, update: UpdateDbUser): Promise<DbUser>;
   abstract findUserByDiscord(discord: string): Promise<DbUser | null>;
   abstract findUserByRevolt(revolt: string): Promise<DbUser | null>;
 

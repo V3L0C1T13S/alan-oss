@@ -10,6 +10,7 @@ export const ErrorMessages = {
   NotEnoughArgs: "Not enough arguments.",
   InvalidArgument: "Invalid argument.",
   DeveloperOnlyCommand: "This command is for developers only.",
+  NotInvitedToAI: "You are not invited to test Ailsa at this time.",
   UnproxiedAttachment: "This attachment is unproxied, and can't be downloaded.",
   NeedsAudioOrVideo: "Please attach audio or video.",
   UnsupportedContentType: "This content type is not supported.",

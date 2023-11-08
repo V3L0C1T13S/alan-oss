@@ -124,6 +124,15 @@ export class MongoDbManager extends BaseDatabaseModel {
     return user.toObject();
   }
 
+  async updateUser(find: FindDbUser, update: Partial<DbUser>) {
+    const user = await User.findOne(find);
+    if (!user) throw new Error(`User ${find.id} not found.`);
+
+    await user.updateOne(update);
+
+    return user;
+  }
+
   async getUser(data: FindDbUser): Promise<DbUser | null> {
     const user = await User.findOne(data);
 

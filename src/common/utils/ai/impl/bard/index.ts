@@ -8,6 +8,8 @@ import { BardPrompt, BardResponse } from "./types.js";
 import { GenericAIConversationManager } from "../../generic/conversationManager.js";
 import { BaseDatabaseModel } from "../../../database/index.js";
 
+export * from "./conversation.js";
+
 export class BardAIManager extends BaseAIManager<any, BardResponse, BardPrompt> {
   private bard: Bard;
 

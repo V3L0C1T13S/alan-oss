@@ -1,5 +1,7 @@
-import { IAskResponseJSON, TAskConfig, TIds } from "bard-ai";
-import { Conversation } from "../../model/index.js";
+import {
+  IAskResponseJSON, TAskConfig, TIds, TImage,
+} from "bard-ai";
+import { Conversation, ConversationAskConfig } from "../../model/index.js";
 
 // TODO: pr bard-ai to export this class
 declare class Chat {
@@ -18,8 +20,18 @@ export class BardConversation extends Conversation {
     this.chat = chat;
   }
 
-  async ask(prompt: string) {
-    const response = await this.chat.ask(prompt);
+  async ask(prompt: string, config?: ConversationAskConfig) {
+    const bardConfig: TAskConfig = {};
+    if (config) {
+      const { image } = config;
+      const extractedUrl = typeof image === "string"
+        ? image.match(/.*?\.(png|jpeg|jpg|webp)/g)?.[0] as TImage
+        : undefined;
+
+      if (image) bardConfig.image = extractedUrl ?? image as TImage;
+    }
+
+    const response = await this.chat.ask(prompt, bardConfig);
 
     if (!this.name) this.name = prompt;
 
