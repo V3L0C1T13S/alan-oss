@@ -55,7 +55,8 @@ export default class Tag extends BaseCommand {
     } = this.args.subcommands;
     const name = this.args.subcommands.name?.toString();
     const content = this.args.subcommands.content?.toString();
-    const authorId = this.author.id;
+    const user = await this.getDbUser();
+    const authorId = user.id;
 
     if (add) {
       if (!name || !content) return ErrorMessages.NotEnoughArgs;
