@@ -1,8 +1,8 @@
-import { ulid } from "ulid";
 import { Logger } from "../../../logger.js";
 import { StorableConversation } from "../../generic/index.js";
 import { LlamaAIManager, assistantName } from "./index.js";
-import { ConversationData, ConversationMessage, ConversationUser } from "../../../database/index.js";
+import { ConversationData } from "../../../database/index.js";
+import { ConversationAskConfig } from "../../model/types.js";
 
 export class LlamaConversation extends StorableConversation {
   protected ai: LlamaAIManager;
@@ -41,7 +41,7 @@ export class LlamaConversation extends StorableConversation {
     }).join("\n");
   }
 
-  private generatePrompt(prompt: string) {
+  private generatePrompt(prompt: string, config?: ConversationAskConfig) {
     this.createMessage(prompt, "User");
 
     const conversationText = this.getConversationText();
@@ -50,7 +50,7 @@ export class LlamaConversation extends StorableConversation {
     * TODO: highly biased towards mistral 7b instruct, doesn't work well on other models
     * - maybe we could make a system prompt wrapper? (or stop being lazy and use node-llama-cpp)
     */
-    return `[INST] ${this.personality}\n\n${conversationText}\n${assistantName}: [/INST]`;
+    return `[INST] ${this.personality.replaceAll("[USER_NAME]", config?.username ?? "User")}\n\n${conversationText}\n${assistantName}: [/INST]`;
   }
 
   async generateName(convo: string) {
@@ -85,38 +85,34 @@ export class LlamaConversation extends StorableConversation {
     this.locked = false;
   }
 
-  async ask(prompt: string) {
+  async ask(prompt: string, config?: ConversationAskConfig) {
     if (this.locked) throw new Error("Generation is currently locked.");
 
     this.lock();
 
-    const fullPrompt = this.generatePrompt(prompt);
-    Logger.debug(`Prompt: ${fullPrompt}`);
+    const fullPrompt = this.generatePrompt(prompt, config);
     const response = await this.generateResult(fullPrompt);
-    Logger.debug(`Raw response: ${response}`);
     const extracted = this.ai.extractResult(response, fullPrompt);
+
     this.createMessage(extracted, assistantName);
-    Logger.debug("All messages:", this.messages);
 
     if (!this.name) {
       this.name = "Creating name...";
+
       this.generateName(extracted)
         .then(async (name) => {
           this.unlock();
           this.name = name;
-          // await this.save().catch((e) => Logger.error("Failed to save conversation:", e));
-          Logger.debug("Name:", this.name);
         })
         .catch((e) => {
           Logger.error(e);
+
           this.name = prompt;
           this.unlock();
         });
     } else {
       this.unlock();
     }
-
-    // await this.save();
 
     return extracted;
   }

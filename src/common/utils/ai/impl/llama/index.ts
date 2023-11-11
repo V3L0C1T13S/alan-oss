@@ -47,6 +47,7 @@ export class LlamaAIManager extends BaseAIManager<any, string, string> {
   extractResult(result: string, prompt: string) {
     return result.replaceAll(prompt, "")
       .replaceAll("User:", "")
+      .replaceAll(`${assistantName}:`, "") // FIXME: is this needed?
       .trimStart()
       .trim();
   }
