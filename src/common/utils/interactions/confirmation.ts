@@ -102,17 +102,18 @@ class ConfirmationInteractionEmitter {
   private onConfirm: ConfirmCallback | undefined;
   private onCancel: CancelCallback | undefined;
 
-  constructor(collector: ButtonInteractionCollector, events: {
+  constructor(collector: ButtonInteractionCollector, info: {
     onConfirm?: ConfirmCallback | undefined,
     onCancel?: CancelCallback | undefined,
+    client_type: ClientType,
   }) {
     this.collector = collector;
-    this.onConfirm = events.onConfirm;
-    this.onCancel = events.onCancel;
+    this.onConfirm = info.onConfirm;
+    this.onCancel = info.onCancel;
 
     this.collector.on("collect", async (interaction) => {
       try {
-        if (!interaction.deferred) await interaction.deferUpdate();
+        if (info.client_type !== "revolt" && !interaction.deferred) await interaction.deferUpdate();
 
         switch (interaction.customId) {
           case confirmId: {
@@ -162,5 +163,6 @@ export async function createConfirmationInteraction(
   return new ConfirmationInteractionEmitter(collector, {
     onConfirm: info.onConfirm,
     onCancel: info.onCancel,
+    client_type: info.client_type,
   });
 }
