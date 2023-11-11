@@ -1,6 +1,4 @@
-export interface ConversationAskConfig {
-  image?: string | Buffer | ArrayBuffer | undefined;
-}
+import { ConversationAskConfig } from "./types.js";
 
 export abstract class Conversation {
   id: string;

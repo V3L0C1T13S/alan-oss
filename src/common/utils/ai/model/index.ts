@@ -2,6 +2,7 @@ import { BaseDatabaseModel } from "../../database/index.js";
 import { Conversation } from "./conversation.js";
 
 export * from "./conversation.js";
+export * from "./types.js";
 
 export abstract class BaseAIManager<initParams = any, promptReturn = string, promptArgs = string> {
   db: BaseDatabaseModel;
