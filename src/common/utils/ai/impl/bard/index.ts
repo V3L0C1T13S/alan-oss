@@ -28,6 +28,7 @@ export class BardAIManager extends BaseAIManager<any, BardResponse, BardPrompt> 
 
   async init() {
     Logger.success("Using Bard AI backend.");
+    Logger.warn("Bard cookies are known to be unstable. Do NOT use in production environments.");
   }
 
   async ask(prompt: string) {
