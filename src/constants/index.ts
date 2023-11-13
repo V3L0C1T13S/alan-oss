@@ -12,6 +12,8 @@ export const revoltToken = process.env.REVOLT_TOKEN;
 export const bardCookie = process.env.BARD_COOKIE;
 export const bardPSIDTS = process.env.BARD_PSIDTS;
 
+export const palmKey = process.env.PALM_KEY;
+
 export const llamaBin = process.env.LLAMA_BIN;
 export const llamaModel = process.env.LLAMA_MODEL;
 export const llamaThreads = process.env.LLAMA_THREADS;

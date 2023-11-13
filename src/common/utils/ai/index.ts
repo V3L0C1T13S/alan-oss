@@ -2,7 +2,13 @@ import { aiBackend } from "../../../constants/index.js";
 import { BaseDatabaseModel } from "../database/index.js";
 import { Logger } from "../logger.js";
 import {
-  BardAIManager, VercelAIManager, DummyAIManager, LlamaAIManager, ElizaAIManager, AIServerManager,
+  BardAIManager,
+  VercelAIManager,
+  DummyAIManager,
+  LlamaAIManager,
+  ElizaAIManager,
+  AIServerManager,
+  PalmAIManager,
 } from "./impl/index.js";
 import { BaseAIManager } from "./model/index.js";
 
@@ -16,6 +22,7 @@ export function createAIManager(db: BaseDatabaseModel): BaseAIManager {
     case "llama": return new LlamaAIManager(db);
     case "eliza": return new ElizaAIManager(db);
     case "aiserver": return new AIServerManager(db);
+    case "palm": return new PalmAIManager(db);
     default: {
       Logger.error(`Unknown AI backend ${aiBackend}. Using dummy backend.`);
 
