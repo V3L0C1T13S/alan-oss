@@ -19,7 +19,7 @@ User: Please tell me the weather.
 ${assistantName}: It is currently sunny out, the temperature is 97 degrees with a wind speed of 20 MPH. It is expected to rain later today.
 User: `;
 
-export class LlamaAIManager extends BaseAIManager<any, string, string> {
+export class LlamaAIManager extends BaseAIManager {
   private conversationManager = new GenericAIConversationManager();
 
   llama: Llama;
@@ -86,7 +86,7 @@ export class LlamaAIManager extends BaseAIManager<any, string, string> {
     return this.conversationManager.getCurrentConversation(owner);
   }
 
-  async closeConversation(id: string): Promise<void> {
+  async closeConversation(id: string) {
     return this.conversationManager.closeConversation(id);
   }
 }
