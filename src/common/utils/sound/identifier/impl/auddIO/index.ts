@@ -26,7 +26,7 @@ export class AuddIOMusicIdentifier extends BaseMusicIdentifier {
           api_token: auddIOToken,
         }),
       });
-      const body: AuddIOResponse = await freshResponse.json();
+      const body = await freshResponse.json() as AuddIOResponse;
       response = body;
       this.cache[url] = response;
       await writeFile(cacheFile, Buffer.from(JSON.stringify(this.cache)));

@@ -68,15 +68,13 @@ export class ACRCloudMusicIdentifier extends BaseMusicIdentifier {
       body: form,
     });
 
-    const body: ACRCloudResponse = await result.json();
+    const body = await result.json() as ACRCloudResponse;
 
     // Music first, humming second
     const music = body.metadata.music?.[0] ?? body.metadata.humming?.[0];
     if (body.status.msg !== "Success" || !music) throw new Error("Unsuccessful retrieval.");
 
     const query = JSON.stringify({
-      // track: music.title,
-      // artists: music.artists.map((x) => x.name),
       acr_id: music.acrid,
     });
     const metadataResult = await fetch(`https://eu-api-v2.acrcloud.com/api/external-metadata/tracks?query=${query}&format=json`, {
@@ -85,7 +83,7 @@ export class ACRCloudMusicIdentifier extends BaseMusicIdentifier {
         Authorization: `Bearer ${acrCloudBearer}`,
       },
     });
-    const metadata: ACRCloudMetadataResponse = await metadataResult.json();
+    const metadata = await metadataResult.json() as ACRCloudMetadataResponse;
 
     return { body, metadata };
   }
