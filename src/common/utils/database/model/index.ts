@@ -6,6 +6,7 @@ import {
   ConversationData, EditConversationData, FindConversationByOwnerData, FindConversationData,
 } from "./conversation.js";
 import { DbUser, FindDbUser, UpdateDbUser } from "./user.js";
+import { ClientType } from "../../../types/index.js";
 
 export * from "./types.js";
 export * from "./tag.js";
@@ -56,7 +57,7 @@ export abstract class BaseDatabaseModel {
     return user;
   }
 
-  async getOrCreateUserByPlatform(platform: "discord" | "revolt", id: string) {
+  async getOrCreateUserByPlatform(platform: ClientType, id: string) {
     if (platform === "discord") return this.getOrCreateDiscordUser(id);
     return this.getOrCreateRevoltUser(id);
   }
