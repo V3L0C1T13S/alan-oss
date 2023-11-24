@@ -35,7 +35,7 @@ export class Llama {
   }
 
   async ask(prompt: string): Promise<string> {
-    const args: string[] = ["-m", this.modelPath, "--simple-io", "--log-disable", "-n", "256", "-p", prompt];
+    const args: string[] = ["-m", this.modelPath, "--simple-io", "--log-disable", "-n", "24000", "--rope-freq-base", "40000", "-p", prompt];
     if (this.stopText) args.push("-r", this.stopText);
     if (this.promptFile) args.push("-f", this.promptFile);
     if (this.threads) args.push("-t", this.threads);
