@@ -5,3 +5,4 @@ export * from "./llama/index.js";
 export * from "./eliza/index.js";
 export * from "./aiserver/index.js";
 export * from "./palm/index.js";
+export * from "./openai/index.js";

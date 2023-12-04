@@ -19,6 +19,9 @@ export const llamaModel = process.env.LLAMA_MODEL;
 export const llamaThreads = process.env.LLAMA_THREADS;
 export const llamaNGL = process.env.LLAMA_NGL;
 
+export const openAIBaseURL = process.env.OPENAI_BASEURL;
+export const openAIToken = process.env.OPENAI_TOKEN;
+
 export const vercelSession = process.env.VERCEL_SESSION;
 export const vercelPlaygroundId = process.env.VERCEL_PLAYGROUND_ID;
 

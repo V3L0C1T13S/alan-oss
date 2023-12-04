@@ -1,9 +1,11 @@
+import { EventEmitter } from "node:events";
 import { ConversationAskConfig } from "./types.js";
 
 export abstract class Conversation {
   id: string;
   owner?: string;
   name?: string;
+  stream = new EventEmitter();
 
   constructor(id: string, owner?: string, name?: string) {
     this.id = id;

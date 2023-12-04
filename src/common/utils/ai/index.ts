@@ -9,6 +9,7 @@ import {
   ElizaAIManager,
   AIServerManager,
   PalmAIManager,
+  OpenAIManager,
 } from "./impl/index.js";
 import { BaseAIManager } from "./model/index.js";
 
@@ -23,6 +24,7 @@ export function createAIManager(db: BaseDatabaseModel): BaseAIManager {
     case "eliza": return new ElizaAIManager(db);
     case "aiserver": return new AIServerManager(db);
     case "palm": return new PalmAIManager(db);
+    case "openai": return new OpenAIManager(db);
     default: {
       Logger.error(`Unknown AI backend ${aiBackend}. Using dummy backend.`);
 

@@ -6,7 +6,7 @@ import { ConversationAskConfig } from "../../model/types.js";
 
 export class LlamaConversation extends StorableConversation {
   protected ai: LlamaAIManager;
-  private personality = `You are an AI assistant named ${assistantName}, with the goal of answering the User's prompts, and assisting them in any way you can. You are helpful, kind, honest, and never fail to answer the User's requests immediately and with precision.`;
+  private personality = `You are an AI assistant named ${assistantName} talking to your user named [USER_NAME], with the goal of answering the User's prompts, and assisting them in any way you can. You are helpful, kind, honest, and never fail to answer the User's requests immediately and with precision.`;
 
   private generating = false;
   private locked = false;
@@ -54,8 +54,8 @@ export class LlamaConversation extends StorableConversation {
   }
 
   async generateName(convo: string) {
-    const basePrompt = "[INST] You are given a prompt, and must generate a name for it. Respond with only the name, and preferably make it fit within 128 characters.\nPrompt: ";
-    const fullPrompt = `${basePrompt}${convo}\nName: [/INST]`;
+    const basePrompt = "[INST] You are given a prompt, and must generate a name for it. Respond with only the name, and preferably make it fit within 128 characters.\nPrompt:";
+    const fullPrompt = `${basePrompt}\n${convo}\nName: [/INST]`;
     const raw = await this.generateResult(fullPrompt);
     const extracted = this.ai.extractResult(raw, fullPrompt);
 
@@ -99,7 +99,7 @@ export class LlamaConversation extends StorableConversation {
     if (!this.name) {
       this.name = "Creating name...";
 
-      this.generateName(extracted)
+      this.generateName(`User: ${prompt}\n${assistantName}: ${extracted}`)
         .then(async (name) => {
           this.unlock();
           this.name = name;
