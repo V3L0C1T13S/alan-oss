@@ -22,6 +22,10 @@ export const llamaNGL = process.env.LLAMA_NGL;
 export const openAIBaseURL = process.env.OPENAI_BASEURL;
 export const openAIToken = process.env.OPENAI_TOKEN;
 
+export const generationBackend = process.env.GENERATION_BACKEND;
+
+export const replicateAPIToken = process.env.REPLICATE_API_TOKEN;
+
 export const vercelSession = process.env.VERCEL_SESSION;
 export const vercelPlaygroundId = process.env.VERCEL_PLAYGROUND_ID;
 
