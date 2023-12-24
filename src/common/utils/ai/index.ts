@@ -15,6 +15,7 @@ import { BaseAIManager } from "./model/index.js";
 
 export * from "./impl/index.js";
 export * from "./model/index.js";
+export * from "./text.js";
 
 export function createAIManager(db: BaseDatabaseModel): BaseAIManager {
   switch (aiBackend) {

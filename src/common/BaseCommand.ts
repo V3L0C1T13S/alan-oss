@@ -148,14 +148,13 @@ export class BaseCommand {
       const channel = this.channel ?? await this.client.channels.fetch(this.message.channelId);
       if (!channel?.isTextBased()) return;
 
-      await channel.send(content);
-    } else {
-      await this.interaction?.channel?.send(content);
+      return channel.send(content);
     }
+    return this.interaction?.channel?.send(content);
   }
 
   async trySend(content: string | MessagePayload | MessageCreateOptions) {
-    await this.send(content).catch(Logger.error);
+    return this.send(content).catch(Logger.error);
   }
 
   protected joinArgsToString() {

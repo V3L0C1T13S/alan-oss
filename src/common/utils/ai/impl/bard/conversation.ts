@@ -2,6 +2,7 @@ import {
   IAskResponseJSON, TAskConfig, TIds, TImage,
 } from "bard-ai";
 import { Conversation, ConversationAskConfig } from "../../model/index.js";
+import { Logger } from "../../../logger.js";
 
 // TODO: pr bard-ai to export this class
 declare class Chat {
@@ -21,6 +22,10 @@ export class BardConversation extends Conversation {
   }
 
   async ask(prompt: string, config?: ConversationAskConfig) {
+    if (config?.character) {
+      Logger.warn("Bard cannot support character-based conversations.");
+    }
+
     const bardConfig: TAskConfig = {};
     if (config) {
       const { image } = config;

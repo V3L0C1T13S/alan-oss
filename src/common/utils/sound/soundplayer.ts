@@ -82,7 +82,7 @@ export class SoundPlayer {
       player.resume();
     });
     player.on("end", async (data) => {
-      if (data.reason === "REPLACED") return;
+      if (data.reason === "replaced") return;
 
       player.node.leaveChannel(options.guild.id);
     });

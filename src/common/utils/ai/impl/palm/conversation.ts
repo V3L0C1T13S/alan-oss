@@ -34,6 +34,16 @@ export class PalmConversation extends Conversation {
   }
 
   async ask(prompt: string, config?: ConversationAskConfig) {
+    const character = config?.character;
+    if (character) {
+      // @ts-expect-error
+      this.chat.config.context = `You are a character named ${character.name}.\nYour personality is the following: "${character.personality}"\nHere is a description of your character: ${character.description}\n\nYou are roleplaying with a user named ${config.username}, and must assume the identity of your character when responding to prompts.`;
+      // @ts-expect-error
+      this.chat.config.examples = [];
+      const result = await this.chat.ask(prompt);
+
+      return result;
+    }
     const result = await this.chat.ask(prompt);
 
     if (!this.name) {

@@ -1,5 +1,7 @@
 import { ulid } from "ulid";
 import OpenAI from "openai";
+import { readFileSync } from "node:fs";
+import { characters } from "../../../characters.js";
 import { Logger } from "../../../logger.js";
 import { BaseAIManager } from "../../model/index.js";
 import { GenericAIConversationManager } from "../../generic/index.js";
