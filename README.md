@@ -1,15 +1,34 @@
 # Al-An OSS
-Open source version of Al-An.ts
 
-## Why another version of Al-An?
-The proprietary version of Al-An has an AI heavily integrated into it, and a very powerful one at that. I originally decided to integrate it heavily into the bot in hopes of making a premium tier that would allow access to more powerful features of its AI (eg. server moderation, raid prevention, suspicious activity flagging), but this never came to be.
+Al-An OSS is an open source Discord bot, focused on utility, minimalism, and providing alternatives to similar closed-source bots.
 
-Either way, it's an extremely dangerous move to release publicly. The last thing we want is for Skynet to become real.
+## Features
 
-## What will happen to Al-An.ts?
-Al-An.ts (Discord/Revolt bot) will be discontinued.
+* Supports text and slash commands
+* Extendable, minimal plugin architecture
+* Optional Revolt support via [Reflectcord](https://github.com/V3L0C1T13S/reflectcord)
+* Conversational AI
+* Character-based AI, similar to character.ai
+* Audio transcription powered by whisper.cpp
+* Music recognition via AuDD or ACRCloud
+* Multiple AI and DB backends
 
-## What's the difference between this version and the old (proprietary) version?
-This version has no AI capabilities, and uses a new plugin format that allows for easier abstraction across different services, interaction types, and more.
+## Setup
 
-This version also uses [Reflectcord](https://github.com/V3L0C1T13S/reflectcord) for [Revolt](https://github.com/revoltchat) compatability instead of [Reject.js](https://github.com/revoltrejectorg/reject.js), which will be deprecated in favor of Reflectcord soon.
+Setting up Al-An OSS is made to be easy, and requires only NodeJS and pnpm to run (albeit at a very basic level)
+
+Simply clone the repository, and create a file named ".env" with these contents:
+```
+DISCORD_TOKEN=YOUR_TOKEN
+```
+Replace YOUR_TOKEN with the token for your Discord bot. If you don't know what a bot token is yet, you should probably look [here](https://discord.com/developers) before proceeding.
+
+Once you've setup a .env file, you can now install the dependencies for the bot by running this command:
+```
+pnpm i
+```
+Finally, you can start the bot by running:
+```
+pnpm start
+```
+Congrats! You should now be hosting your own instance of Al-An OSS, and can begin playing with its features.
