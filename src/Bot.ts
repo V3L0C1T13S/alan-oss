@@ -40,7 +40,10 @@ import {
   createAIManager,
   SoundPlayerManager,
   createParameter,
+  createTTSManager,
+  createVoiceRecognitionManager,
 } from "./common/utils/index.js";
+import { AIThreadManager } from "./common/utils/aiThread.js";
 
 export class Bot {
   revoltClient: Client;
@@ -72,6 +75,9 @@ export class Bot {
   database: BaseDatabaseModel;
   aiManager: BaseAIManager;
   soundPlayerManager = new SoundPlayerManager();
+  ttsManager = createTTSManager();
+  voiceRecognitionManager = createVoiceRecognitionManager();
+  aiThreadManager = new AIThreadManager(this);
 
   constructor() {
     if (!discordToken && !revoltToken) throw new Error("No tokens found.");
@@ -102,6 +108,7 @@ export class Bot {
     await this.pluginManager.init();
     await this.database.init();
     await this.aiManager.init({});
+    await this.ttsManager.init();
 
     await this.login();
   }
@@ -188,45 +195,49 @@ export class Bot {
   }
 
   protected async onMessage(message: Message) {
-    if (message.author.id === message.client.user.id) return;
-    if (message.author.bot || message.webhookId) return;
-    if (!message.content.startsWith(botPrefix)) return;
+    try {
+      if (message.author.id === message.client.user.id) return;
+      if (message.author.bot || message.webhookId) return;
+      if (!message.content.startsWith(botPrefix)) return;
 
-    const text = message.content.substring(botPrefix.length);
-    const preArgs = text.split(/\s+/g);
-    const commandName = preArgs.shift()?.toLowerCase();
-    if (!commandName) return;
+      const text = message.content.substring(botPrefix.length);
+      const preArgs = text.split(/\s+/g);
+      const commandName = preArgs.shift()?.toLowerCase();
+      if (!commandName) return;
 
-    const Cmd = this.pluginManager.commands.get(commandName);
-    if (!Cmd) return;
+      const Cmd = this.pluginManager.commands.get(commandName);
+      if (!Cmd) return;
 
-    if (!canExecuteCommand(message.author.id, Cmd, this.identifyClient(message.client))) {
-      await message.reply(ErrorMessages.DeveloperOnlyCommand);
+      if (!canExecuteCommand(message.author.id, Cmd, this.identifyClient(message.client))) {
+        await message.reply(ErrorMessages.DeveloperOnlyCommand);
 
-      return;
+        return;
+      }
+
+      const commandClass = new Cmd(this, message.client, {
+        message,
+        channel: message.channel,
+        type: "text",
+        clientType: this.identifyClient(message.client),
+        args: {
+          users: message.mentions.users.toJSON(),
+          subcommands: parseCommand(preArgs),
+        },
+      });
+
+      const result = await commandClass.execute().catch((e) => ({
+        content: ErrorMessages.ErrorOccurred,
+        files: [new AttachmentBuilder(Buffer.from(`${e}`)).setName("error.txt")],
+      }));
+
+      if (!result) return;
+
+      await message.reply(result).catch((e) => Logger.error(ErrorMessages.ErrorInErrorHandler, e));
+
+      await this.database.addCount(Cmd.name.toLowerCase()).catch((e) => Logger.error(e));
+    } catch (e) {
+      Logger.error("Error in message handler:", e);
     }
-
-    const commandClass = new Cmd(this, message.client, {
-      message,
-      channel: message.channel,
-      type: "text",
-      clientType: this.identifyClient(message.client),
-      args: {
-        users: message.mentions.users.toJSON(),
-        subcommands: parseCommand(preArgs),
-      },
-    });
-
-    const result = await commandClass.run().catch((e) => ({
-      content: ErrorMessages.ErrorOccurred,
-      files: [new AttachmentBuilder(Buffer.from(`${e}`)).setName("error.txt")],
-    }));
-
-    if (!result) return;
-
-    await message.reply(result).catch((e) => Logger.error(ErrorMessages.ErrorInErrorHandler, e));
-
-    await this.database.addCount(Cmd.name.toLowerCase()).catch((e) => Logger.error(e));
   }
 
   protected async interactionCreate(interaction: Interaction) {
@@ -278,7 +289,7 @@ export class Bot {
         },
       });
 
-      const result = await commandClass.run();
+      const result = await commandClass.execute();
 
       if (!result) return;
 

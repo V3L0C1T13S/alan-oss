@@ -13,8 +13,16 @@ export const ErrorMessages = {
   NotInvitedToAI: "You are not invited to test Ailsa at this time.",
   UnproxiedAttachment: "This attachment is unproxied, and can't be downloaded.",
   NeedsAudioOrVideo: "Please attach audio or video.",
-  UnsupportedContentType: "This content type is not supported.",
-  UndetectableMimeType: "Couldn't detect a mime type for this contents.",
+  UnsupportedContentType: "The content type {content_type} is not supported. Please use one of the following: {supported_types}",
+  UndetectableMimeType: "Couldn't detect a mime type for this file.",
+
+  NoPermissionToJoinVoiceChannel: "I don't have permission to join that voice channel.",
+  LivetalkSessionAlreadyActive: "There is already an active session in that channel.",
+  NoLiveTalkSession: "There is no active live talk session in that channel.",
+
+  UnsupportedBackendCapability: "This instance doesn't support the {capability} capability.",
+
+  AIThreadCreateError: "# Awkward...\nWe couldn't create a thread in this channel.",
 };
 
 export const Messages = {

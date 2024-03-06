@@ -53,7 +53,7 @@ export class OpenAIConversation extends StorableConversation {
       const username = "<|prompter|>";
       const systemName = "<|system|>";
       // TODO: sometimes, not putting a space in the prompt makes the ai work better
-      const basePrompt = `You are a character named ${character.name}, chatting with a user${config.username ? ` named ${config.username}` : ""}.\nA description of your character is this: ${character.description}\nYour character's personality consists of these traits: ${character.personality}\n${likes ? `You like the following: ${likes}\n` : ""}${dislikes ? `You dislike the following: ${dislikes}\n` : ""}${character.examples ? `Conversation examples:\n${character.examples.map((x) => `${username}${x.prompt}\n${systemName}${x.response}`).join("\n")}\n` : ""}`;
+      const basePrompt = `You are a character named ${character.name}, chatting with a user${config.username ? ` named ${config.username}` : ""}.\nA description of your character is this: ${character.description}\nYour character's personality consists of these traits: ${character.personality}\n${likes ? `You like the following: ${likes}\n` : ""}${dislikes ? `You dislike the following: ${dislikes}\n` : ""}${character.examples ? `Conversation examples:\n${character.examples.map((x) => `${username} ${x.prompt}\n${systemName} ${x.response}`).join("\n")}\n` : ""}`;
 
       const fullPrompt = `${this.bosToken}[INST] ${AIUtils.replaceVariables(basePrompt, {
         username: config.username,
@@ -86,6 +86,7 @@ export class OpenAIConversation extends StorableConversation {
 
       return completion.choices[0]?.text.replaceAll(this.eosToken, "") ?? "No response.";
     }
+
     const msg = this.createMessage(prompt, "user");
 
     const stream = this.openai.beta.chat.completions.stream({

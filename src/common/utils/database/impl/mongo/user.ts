@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { DbUser } from "../../model/index.js";
+import { Agreement, DbUser } from "../../model/index.js";
 
 const AccountSchema = new Schema({
   discord: {
@@ -12,14 +12,25 @@ const AccountSchema = new Schema({
   },
 });
 
+export const AgreementSchema = new Schema<Agreement>({
+  agreed_at: String,
+});
+
+export const AgreementsSchema = new Schema({
+  ai_tos: {
+    type: AgreementSchema,
+    required: false,
+  },
+});
+
 export const UserSchema = new Schema<DbUser>({
   id: String,
   accounts: {
     type: AccountSchema,
     required: false,
   },
-  accepted_ai_tos: {
-    type: Boolean,
+  agreements: {
+    type: AgreementsSchema,
     required: false,
   },
 });

@@ -8,8 +8,6 @@ const conversationParameter: CommandParameter = {
 };
 
 export default class Conversation extends BaseCommand {
-  static private = true;
-
   static description = "Manage your conversations with the AI.";
   static parameters: CommandParameter[] = [{
     name: "create",
@@ -45,12 +43,19 @@ export default class Conversation extends BaseCommand {
       description: "The template to set for the conversation",
       type: CommandParameterTypes.String,
     }],
+  }, {
+    name: "refresh",
+    description: "Create a new conversation and switch to it.",
+    type: CommandParameterTypes.Subcommand,
+    subcommands: [],
   }];
 
   async run() {
     if (!this.args?.subcommands) return ErrorMessages.NotEnoughArgs;
     const conversationId = this.args.subcommands.conversation?.toString();
-    const { list, create, close } = this.args.subcommands;
+    const {
+      list, create, close, refresh,
+    } = this.args.subcommands;
 
     await this.ack();
 
@@ -101,6 +106,13 @@ export default class Conversation extends BaseCommand {
       } catch (e) {
         return "Couldn't set conversation template.";
       }
+    }
+    if (refresh) {
+      const newConversation = await this.bot.aiManager.createConversation(user.id);
+
+      await this.bot.aiManager.setCurrentConversation(user.id, newConversation.id);
+
+      return "Conversation refreshed!";
     }
 
     return ErrorMessages.InvalidArgument;

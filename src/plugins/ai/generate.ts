@@ -53,9 +53,9 @@ export default class Generate extends BaseCommand {
       });
       if (!result.url && !result.data) return ErrorMessages.AIError;
 
-      const mediaData = await fetch(`${result.url}`);
+      const mediaData = result.data ?? await (await fetch(`${result.url}`)).arrayBuffer();
       return {
-        files: [new AttachmentBuilder(Buffer.from(await mediaData.arrayBuffer()))
+        files: [new AttachmentBuilder(Buffer.from(mediaData))
           .setDescription("AI Generated video").setName("output.mp4")],
       };
     } if (image) {

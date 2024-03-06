@@ -44,6 +44,9 @@ export class PalmConversation extends Conversation {
 
       return result;
     }
+    const context = `You are an AI Assistant named Ailsa.${config?.username ? ` You are currently talking to a user named ${config.username}` : ""}${config?.voicechat?.participants ? ` - You are currently in a voice call with these participants: ${config.voicechat.participants.map((x) => x.username).join("\n")}\n\nYou may safely refer to each person if needed, and each person may communicate amongst themselves, or to you.` : ""}`;
+    // @ts-expect-error
+    this.chat.config.content = context;
     const result = await this.chat.ask(prompt);
 
     if (!this.name) {

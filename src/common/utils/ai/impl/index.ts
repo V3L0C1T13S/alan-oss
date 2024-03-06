@@ -6,3 +6,4 @@ export * from "./eliza/index.js";
 export * from "./aiserver/index.js";
 export * from "./palm/index.js";
 export * from "./openai/index.js";
+export * from "./vertex/index.js";

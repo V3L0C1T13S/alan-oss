@@ -1,10 +1,21 @@
 import { BaseCommand, CommandParameter, CommandParameterTypes } from "../../common/index.js";
 import { ErrorMessages } from "../../constants/index.js";
 
+const maxTagNameLength = 64;
+const maxTagContentLength = 2048;
+
 const tagContentParam: CommandParameter = {
   name: "content",
   description: "Content of the tag.",
   type: CommandParameterTypes.String,
+  maxLength: maxTagContentLength,
+};
+
+const tagNameParam: CommandParameter = {
+  name: "name",
+  description: "Name of the tag.",
+  type: CommandParameterTypes.String,
+  maxLength: maxTagNameLength,
 };
 
 export default class Tag extends BaseCommand {
@@ -13,38 +24,22 @@ export default class Tag extends BaseCommand {
     name: "add",
     description: "Add a new tag.",
     type: CommandParameterTypes.Subcommand,
-    subcommands: [{
-      name: "name",
-      description: "Name of the tag.",
-      type: CommandParameterTypes.String,
-    }, tagContentParam],
+    subcommands: [tagNameParam, tagContentParam],
   }, {
     name: "get",
     description: "Get a tag.",
     type: CommandParameterTypes.Subcommand,
-    subcommands: [{
-      name: "name",
-      description: "Name of the tag to get.",
-      type: CommandParameterTypes.String,
-    }],
+    subcommands: [tagNameParam],
   }, {
     name: "edit",
     description: "Edit a tag.",
     type: CommandParameterTypes.Subcommand,
-    subcommands: [{
-      name: "name",
-      description: "Name of the tag to edit.",
-      type: CommandParameterTypes.String,
-    }, tagContentParam],
+    subcommands: [tagNameParam, tagContentParam],
   }, {
     name: "remove",
     description: "Remove a tag.",
     type: CommandParameterTypes.Subcommand,
-    subcommands: [{
-      name: "name",
-      description: "Name of the tag to remove.",
-      type: CommandParameterTypes.String,
-    }],
+    subcommands: [tagNameParam],
   }];
 
   async run() {
@@ -55,6 +50,7 @@ export default class Tag extends BaseCommand {
     } = this.args.subcommands;
     const name = this.args.subcommands.name?.toString();
     const content = this.args.subcommands.content?.toString();
+
     const user = await this.getDbUser();
     const authorId = user.id;
 

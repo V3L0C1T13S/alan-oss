@@ -10,4 +10,5 @@ export * from "./sound/index.js";
 export * from "./cdn/index.js";
 export * from "./interactions/index.js";
 export * from "./generation/index.js";
-export * from "./characters.js"
+export * from "./characters.js";
+export * from "./hasher.js";

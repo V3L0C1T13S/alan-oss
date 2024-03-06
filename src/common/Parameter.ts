@@ -29,7 +29,12 @@ export interface ChoiceCommandParameter<
   choices?: ParameterChoice[],
 }
 
-export type StringCommandParameter = ChoiceCommandParameter<CommandParameterTypes.String>;
+export interface StringCommandParameter extends ChoiceCommandParameter<
+  CommandParameterTypes.String
+> {
+  maxLength?: number,
+}
+
 export type NumberCommandParameter = BaseCommandParameter<CommandParameterTypes.Number>;
 export type BoolCommandParameter = BaseCommandParameter<CommandParameterTypes.Bool>;
 export type UserCommandParameter = BaseCommandParameter<CommandParameterTypes.User>;

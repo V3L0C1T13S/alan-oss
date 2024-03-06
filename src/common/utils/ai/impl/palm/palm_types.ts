@@ -11,7 +11,7 @@ import {
   CreateChatConfig,
   ChatAskConfig,
   Message,
-} from "palm-api/out/google-ai-types";
+} from "palm-api/out/google-ai-types.js";
 import PaLM from "palm-api";
 
 export declare class Chat {

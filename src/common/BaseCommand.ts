@@ -14,10 +14,11 @@ import {
   User,
 } from "discord.js";
 import { ulid } from "ulid";
-import { Bot } from "../Bot";
-import { CommandParameter } from "./Parameter.js";
+import { Bot } from "../Bot.js";
+import { CommandParameter, CommandParameterTypes } from "./Parameter.js";
 import { Logger } from "./utils/index.js";
 import { ClientType } from "./types/index.js";
+import { getFirstAttachment } from "./utils/attachment.js";
 
 type TextCommandType = "text"
 
@@ -33,15 +34,15 @@ interface CommandArgs {
 }
 
 export interface BaseCommandOptions {
-    type: CommandType,
-    clientType: ClientType,
-    channel?: Channel,
-    args?: CommandArgs,
+  type: CommandType,
+  clientType: ClientType,
+  channel?: Channel,
+  args?: CommandArgs,
 }
 
 export interface BaseTextCommandOptions extends BaseCommandOptions {
-    type: TextCommandType,
-    message: Message,
+  type: TextCommandType,
+  message: Message,
 }
 
 export interface BaseInteractionCommandOptions extends BaseCommandOptions {
@@ -122,6 +123,49 @@ export class BaseCommand {
     }
   }
 
+  async execute() {
+    // eslint-disable-next-line no-use-before-define
+    const cmdClass = this.constructor as BaseCommandConstructor;
+
+    try {
+      // precheck if params are valid
+      cmdClass.parameters.forEach((param) => {
+        /*
+        // TODO: causes issues with classic commands
+        if (!("optional" in param && param.optional)
+        && this.args?.subcommands?.[param.name] === undefined) {
+          throw new Error(`${param.name} must be specified.`);
+        }
+        */
+
+        const paramValue = this.args?.subcommands?.[param.name];
+        if (paramValue === undefined) return;
+
+        switch (param.type) {
+          case CommandParameterTypes.Number: {
+            if (Number.isNaN(paramValue)) throw new Error(`${param.name} must be a number.`);
+
+            break;
+          }
+          case CommandParameterTypes.String: {
+            const paramString = paramValue.toString();
+
+            if (param.maxLength && paramString.length > param.maxLength) {
+              throw new Error(`${param.name} must be no more than ${param.maxLength} character${param.maxLength > 1 ? "s" : ""}.`);
+            }
+
+            break;
+          }
+          default:
+        }
+      });
+    } catch (e) {
+      return `Error: ${e}`;
+    }
+
+    return this.run();
+  }
+
   async run(): Promise<GenericReply> {
     return {
       embeds: [{
@@ -135,7 +179,6 @@ export class BaseCommand {
     if (this.type === "text" && this.message) {
       const channel = this.channel ?? await this.client.channels.fetch(this.message.channelId);
       if (!channel?.isTextBased()) return;
-      if (channel.type === ChannelType.GuildStageVoice) return;
 
       await channel.sendTyping();
     } else if (!this.interaction?.deferred) {
@@ -153,6 +196,13 @@ export class BaseCommand {
     return this.interaction?.channel?.send(content);
   }
 
+  async followUp(content: string | MessagePayload) {
+    if (this.type === "text" && this.message) {
+      return this.message.reply(content);
+    }
+    return this.interaction?.followUp(content);
+  }
+
   async trySend(content: string | MessagePayload | MessageCreateOptions) {
     return this.send(content).catch(Logger.error);
   }
@@ -163,54 +213,22 @@ export class BaseCommand {
     return Object.values(this.args.subcommands).flat().join(" ");
   }
 
-  protected async getFirstAttachment(): Promise<GenericAttachment | undefined> {
+  protected async getFirstAttachment(options?: {
+    disallowLastMessage?: boolean,
+  }): Promise<GenericAttachment | undefined> {
+    if (!this.message && !this.interaction) throw new Error("No attachment or interaction.");
+
+    const attachment = getFirstAttachment({
+      channel: !options?.disallowLastMessage ? this.channel : undefined,
+      ...(this.message ? {
+        message: this.message,
+      } : {
+        interaction: this.interaction!, // TODO (types): fix this crap
+      }),
+    });
+
+    // special args-based attachment extraction
     const id = ulid();
-    const message = this.message?.reference ? await this.message.fetchReference() : this.message;
-    // our attachments or reply attachments first
-    const attachment = this.attachments?.first() ?? message?.attachments.first();
-
-    if (attachment) {
-      return {
-        discord_id: attachment.id,
-        id,
-        url: attachment.url,
-        proxy_url: attachment.proxyURL,
-        type: attachment.contentType,
-      };
-    }
-
-    if (message) {
-      // TODO (revolt): this wont work because revolt does a late update for embeds
-      if (message.embeds[0]) {
-        const embed = message.embeds[0];
-
-        if (embed.video && embed.video.proxyURL) {
-          return {
-            id,
-            url: embed.video.url,
-            proxy_url: embed.video.proxyURL,
-            type: "video",
-          };
-        }
-        if (embed.image && embed.image.proxyURL) {
-          return {
-            id,
-            url: embed.image.url,
-            proxy_url: embed.image.proxyURL,
-            type: "image",
-          };
-        }
-        if (embed.thumbnail && embed.thumbnail.proxyURL) {
-          return {
-            id,
-            url: embed.thumbnail.url,
-            proxy_url: embed.thumbnail.proxyURL,
-            type: "image",
-          };
-        }
-      }
-    }
-
     const url = this.args?.subcommands?.url;
     if (url && typeof url === "string") {
       // TODO: proxy url
@@ -219,6 +237,8 @@ export class BaseCommand {
         url,
       };
     }
+
+    if (attachment) return attachment;
 
     return;
   }

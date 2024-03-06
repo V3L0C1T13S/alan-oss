@@ -1,10 +1,18 @@
+type AgreementDate = string;
+
+export type Agreement = {
+    agreed_at: AgreementDate,
+}
+
 export interface DbUser {
     id: string,
     accounts?: {
         discord?: string,
         revolt?: string,
     }
-    accepted_ai_tos?: boolean,
+    agreements?: {
+        ai_tos?: Agreement,
+    },
 }
 
 export type FindDbUser = Pick<DbUser, "id">;

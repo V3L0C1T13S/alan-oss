@@ -146,7 +146,7 @@ export class MongoDbManager extends BaseDatabaseModel {
   }
 
   async findUserByRevolt(revolt: string) {
-    const user = await User.findOne({ accounts: { revolt } });
+    const user = await User.findOne({ "accounts.revolt": revolt });
 
     return user?.toObject() ?? null;
   }

@@ -1,4 +1,4 @@
-import { CommandParameter } from "common/Parameter.js";
+import { CommandParameter } from "../../common/index.js";
 import Whois from "./whois.js";
 
 export default class whoami extends Whois {

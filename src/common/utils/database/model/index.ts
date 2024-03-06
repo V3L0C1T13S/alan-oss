@@ -1,5 +1,5 @@
-import { Bot } from "Bot";
 import { ulid } from "ulid";
+import { Bot } from "../../../../Bot.js";
 import { type CommandCounts } from "./types.js";
 import { TagData, EditTagData, FindTagData } from "./tag.js";
 import {

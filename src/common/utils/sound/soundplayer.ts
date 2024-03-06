@@ -1,5 +1,5 @@
 import {
-  Shoukaku, Connectors, NodeOption, Player, Track, TrackExceptionEvent,
+  Shoukaku, Connectors, NodeOption, Player, Track, TrackExceptionEvent, LoadType,
 } from "shoukaku";
 import {
   Client, Guild, GuildMember, VoiceBasedChannel,
@@ -48,19 +48,24 @@ export class SoundPlayer {
     const voiceChannel = options.member.voice.channel;
     if (!voiceChannel) return "You must be in a channel for this to work!";
 
-    const node = this.manager.getNode();
-    if (!node) return "Couldn't get node??? WTF?";
+    const node = this.manager.nodes.get("localhost");
+    if (!node) return "Couldn't get node.";
 
     const sound = await node.rest.resolve(soundURL).catch((e) => Logger.error(e));
-    if (!sound || ["LOAD_FAILED", "NO_MATCHES"].includes(sound.loadType)) return "Sound couldn't be downloaded.";
+    if (!sound || [LoadType.EMPTY, LoadType.ERROR].includes(sound.loadType)) return "Sound couldn't be downloaded.";
 
-    const player = node.players.get(voiceChannel.guildId) ?? await node.joinChannel({
-      guildId: voiceChannel.guildId,
-      channelId: voiceChannel.id,
-      shardId: voiceChannel.guild.shardId,
-      deaf: true,
-    });
-    const track = sound.tracks[0];
+    const player = node.manager.players.get(voiceChannel.guildId)
+      ?? await node.manager.joinVoiceChannel({
+        guildId: voiceChannel.guildId,
+        channelId: voiceChannel.id,
+        shardId: voiceChannel.guild.shardId,
+        deaf: true,
+      });
+    const track = sound.loadType === LoadType.TRACK
+      ? sound.data
+      : sound.loadType === LoadType.PLAYLIST
+        ? sound.data.tracks[0]
+        : undefined;
     if (!track) return "No tracks.";
 
     await this.nextSong(options, player, track, voiceChannel);
@@ -72,25 +77,27 @@ export class SoundPlayer {
     const parts = Math.floor((0 / track.info.length) * 10);
 
     this.removePlayerListeners(player);
-    player.playTrack(track);
+    await player.playTrack({
+      track: track.encoded,
+    });
 
     player.once("exception", (e) => this.onError(e, player, channel));
-    player.once("stuck", () => {
-      const nodeName = this.manager?.getNode()?.name;
+    player.once("stuck", async () => {
+      const nodeName = this.manager?.nodes.get("localhost")?.name;
       if (!nodeName) return;
-      player.move(nodeName);
-      player.resume();
+      await player.move(nodeName);
+      await player.resume();
     });
     player.on("end", async (data) => {
       if (data.reason === "replaced") return;
 
-      player.node.leaveChannel(options.guild.id);
+      await player.node.manager.leaveVoiceChannel(options.guild.id);
     });
   }
 
   private async onError(error: TrackExceptionEvent, player: Player, channel: VoiceBasedChannel) {
     try {
-      player.node.leaveChannel(channel.guildId);
+      await player.node.manager.leaveVoiceChannel(channel.guildId);
     } catch (e) {
       // noop
     }

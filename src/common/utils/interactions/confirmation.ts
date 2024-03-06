@@ -119,7 +119,9 @@ class ConfirmationInteractionEmitter {
           case confirmId: {
             const result = this.onConfirm ? await this.onConfirm() : "Confirmed.";
             // @ts-ignore
-            await interaction.editReply(result);
+            if (info.client_type !== "revolt") await interaction.editReply(result);
+            // @ts-ignore
+            else await interaction.message.reply(result);
 
             collector.stop();
             break;
@@ -127,7 +129,9 @@ class ConfirmationInteractionEmitter {
           case cancelId: {
             const result = this.onCancel ? await this.onCancel() : "Cancelled.";
             // @ts-ignore
-            await interaction.editReply(result);
+            if (info.client_type !== "revolt") await interaction.editReply(result);
+            // @ts-ignore
+            else await interaction.message.reply(result);
 
             collector.stop();
             break;

@@ -15,9 +15,16 @@ export interface Character {
     clothes?: string,
 }
 
+export interface Participant {
+    username: string;
+}
+
 export interface ConversationAskConfig {
     image?: string | Buffer | ArrayBuffer | undefined,
     username?: string,
     character?: Character,
     audio?: Buffer | ArrayBuffer,
+    voicechat?: {
+        participants?: Participant[] | undefined,
+    },
 }

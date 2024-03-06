@@ -1,6 +1,4 @@
-import {
-  AttachmentBuilder, EmbedBuilder,
-} from "discord.js";
+import { AttachmentBuilder, ChannelType, EmbedBuilder } from "discord.js";
 import {
   Logger,
   BaseCommand,
@@ -9,6 +7,7 @@ import {
   BaseButtonInteractionInfo,
   ConfirmationInteractionInfo,
   createConfirmationInteraction,
+  MessageFormatter,
 } from "../../common/index.js";
 import {
   ErrorMessages,
@@ -37,7 +36,9 @@ In addition to the content itself, the following information about you may be in
 * Connected accounts (Google, Discord, Revolt, etc.)
 * Context around the content, such as conversation history
 * Estimated location
+* Audio recordings
 
+These reports may be forwarded to law enforcement, depending on the severity.
 Additionally, the system may suspend your access to our services upon repeated offenses.`,
   });
 
@@ -60,12 +61,23 @@ export default class Talk extends BaseCommand {
     description: "Send a URL of an attachment to the AI.",
     type: CommandParameterTypes.String,
     optional: true,
+  }, {
+    name: "thread",
+    description: "Create a thread for live conversation",
+    type: CommandParameterTypes.Bool,
+    optional: true,
   }];
 
   async run() {
-    const prompt = this.args?.subcommands?.prompt?.toString() ?? this.joinArgsToString();
-    const attachment = await this.getFirstAttachment();
-    const url = this.args?.subcommands?.url?.toString();
+    if (!this.args?.subcommands) return ErrorMessages.NotEnoughArgs;
+
+    const prompt = this.args.subcommands.prompt?.toString() ?? this.joinArgsToString();
+    const attachment = await this.getFirstAttachment({
+      disallowLastMessage: true,
+    });
+    const url = this.args.subcommands.url?.toString();
+    const { thread } = this.args.subcommands;
+
     const buffer = !url && attachment?.proxy_url
       ? await (await fetch(attachment.proxy_url)).arrayBuffer()
       : undefined;
@@ -77,7 +89,7 @@ export default class Talk extends BaseCommand {
 
       const user = await this.getDbUser();
 
-      if (!user.accepted_ai_tos) {
+      if (!user.agreements?.ai_tos) {
         const baseInfo: BaseButtonInteractionInfo = {
           embeds: [tosEmbed.toJSON()],
           buttons: [],
@@ -97,7 +109,11 @@ export default class Talk extends BaseCommand {
           ...fullInfo,
           onConfirm: async () => {
             await this.bot.database.updateUser({ id: user.id }, {
-              accepted_ai_tos: true,
+              agreements: {
+                ai_tos: {
+                  agreed_at: new Date().toISOString(),
+                },
+              },
             });
 
             return "TOS accepted. You can now use AI features.";
@@ -113,32 +129,28 @@ export default class Talk extends BaseCommand {
         username: this.author.username,
       });
 
-      /*
-      const msg = await this.send("Generating...");
-      let streamContent = "";
-
-      const interval = setInterval(async () => {
-        await msg?.edit({
-          content: streamContent,
-        }).catch((e) => console.error(e));
-      }, 3000);
-
-      conversation.stream.on("content", (delta: string) => {
-        streamContent += delta;
-      });
-      conversation.stream.on("finished", async (delta: string, snapshot: string) => {
-        clearInterval(interval);
-        await msg?.edit({
-          content: streamContent,
-        }).catch((e) => console.error(e));
-      });
-      */
-
       if (response.length > maxMessageLength) {
         return {
           content: "The AI blew over the length limit. Here's your response.",
           files: [new AttachmentBuilder(Buffer.from(response, "utf-8")).setName("response.txt")],
         };
+      }
+
+      if (thread && this.channel?.type === ChannelType.GuildText) {
+        try {
+          const aiThread = await this.bot.aiThreadManager.createThread(conversation, {
+            startMessage: this.message,
+            channel: this.channel,
+          });
+
+          await aiThread.addMember(this.author);
+          const responseMessage = await aiThread.send(response);
+          return responseMessage.url;
+        } catch (e) {
+          Logger.error("Failed to create thread:", e);
+
+          return MessageFormatter.AIThreadCreateError(this.clientType);
+        }
       }
 
       return response;

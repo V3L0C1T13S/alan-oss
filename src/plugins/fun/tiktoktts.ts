@@ -1,17 +1,23 @@
-import tiktok from "tiktok-tts";
+import process from "node:process";
 import path from "node:path";
-import { mkdir, readFile } from "node:fs/promises";
-import { ulid } from "ulid";
+import { readFile } from "node:fs/promises";
 import { AttachmentBuilder } from "discord.js";
 import {
-  CommandParameter, CommandParameterTypes, BaseCommand, initParameters, Logger, TiktokVoiceTable,
+  CommandParameter,
+  CommandParameterTypes,
+  BaseCommand,
+  initParameters,
+  Logger,
+  TiktokVoiceTable,
+  TiktokTTSModel,
 } from "../../common/index.js";
 import {
-  ErrorMessages, alanTmpDir, tikTokAPIURL, tiktokSessionId,
+  ErrorMessages, tiktokSessionId,
 } from "../../constants/index.js";
 
 const tiktokVoices: TiktokVoiceTable = JSON.parse((await readFile(path.join(process.cwd(), "resources/tiktok_tts_table.json"))).toString("utf-8"));
-const tiktokTempDir = path.join(alanTmpDir, "tiktok-audio");
+
+const tiktokTTS = new TiktokTTSModel();
 
 export default class TiktokTTS extends BaseCommand {
   async run() {
@@ -21,14 +27,14 @@ export default class TiktokTTS extends BaseCommand {
     const voice = this.args?.subcommands?.voice;
     if (typeof text !== "string") return ErrorMessages.NotEnoughArgs;
 
-    const filePath = path.join(tiktokTempDir, ulid());
-
     await this.ack();
 
     try {
-      await tiktok.createAudioFromText(text, filePath, voice?.toString());
-
-      const buffer = await readFile(`${filePath}.mp3`);
+      const buffer = await tiktokTTS.generate(text, {
+        tiktok: {
+          voice: voice?.toString(),
+        },
+      });
 
       const attachment = new AttachmentBuilder(buffer)
         .setName("tts.mp3")
@@ -48,11 +54,7 @@ export default class TiktokTTS extends BaseCommand {
   static async init(params: initParameters) {
     await super.init(params);
 
-    if (tiktokSessionId) {
-      await mkdir(tiktokTempDir, { recursive: true });
-
-      tiktok.config(tiktokSessionId, tikTokAPIURL);
-    }
+    await tiktokTTS.init();
 
     return this;
   }
